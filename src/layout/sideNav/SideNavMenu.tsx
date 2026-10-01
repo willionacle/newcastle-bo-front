@@ -30,6 +30,9 @@ type MenuNode = {
   badge?: number;
   menuNo?: number;
   description?: React.ReactNode;
+  // Optional trailing element (e.g. the admin-IP ⚠ badge) and tooltip text.
+  suffix?: React.ReactNode;
+  title?: string;
   children?: MenuNode[];
 };
 
@@ -48,6 +51,8 @@ const SideNavMenu = ({ sideNavCollapsed }: { sideNavCollapsed: boolean }) => {
       badge: x.badge,
       menuNo: x.menuNo,
       description: x.description,
+      suffix: x.suffix,
+      title: x.title,
       ...(Array.isArray(x.children) && x.children.length > 0
         ? { children: x.children.map(toNode) }
         : {}),
@@ -92,7 +97,7 @@ const SideNavMenu = ({ sideNavCollapsed }: { sideNavCollapsed: boolean }) => {
         ? `Menu #${String(node.menuNo).padStart(2, "0")}`
         : undefined;
       return (
-        <Tooltip title={menuLabel} placement="right">
+        <Tooltip title={node.title ?? menuLabel} placement="right">
           <li
             style={SideNavMenuItemStyle()}
             onMouseOver={() => sideNavCollapsed && setHover(node.label)}
@@ -119,6 +124,7 @@ const SideNavMenu = ({ sideNavCollapsed }: { sideNavCollapsed: boolean }) => {
                 <span style={MenuIconStyle(sideNavCollapsed)}>{node.icon}</span>
               )}
               <span style={MenuLabelStyle(sideNavCollapsed)}>{node.label}</span>
+              {node.suffix}
             </Link>
           </li>
         </Tooltip>
@@ -166,7 +172,7 @@ const SideNavMenu = ({ sideNavCollapsed }: { sideNavCollapsed: boolean }) => {
                   ? `Menu #${String(child.menuNo).padStart(2, "0")}`
                   : undefined;
                 return (
-                  <Tooltip key={child.key} title={childMenuLabel} placement="right">
+                  <Tooltip key={child.key} title={child.title ?? childMenuLabel} placement="right">
                     <li style={SideNavMenuItemChildrenStyle}>
                       <Button
                         type="text"
@@ -186,6 +192,7 @@ const SideNavMenu = ({ sideNavCollapsed }: { sideNavCollapsed: boolean }) => {
                             </span>
                           )}
                           {child.label}
+                          {child.suffix}
                         </span>
                       </Button>
                     </li>

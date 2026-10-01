@@ -10,7 +10,7 @@ import {
   notification,
 } from "antd";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import GroupItemForm from "./components/GroupItemForm";
 import { createMissionGroupAPI, MissionGroupBody } from "@/api/daily-mission/post";
@@ -20,6 +20,11 @@ import { DefaultOptionType } from "antd/es/select";
 import { updateMissionGroupAPI } from "@/api/daily-mission/put";
 import { Select, SelectProps } from "antd/lib";
 // import { PlusCircleOutlined } from "@ant-design/icons";
+import {
+  getDailyMissionGroupTemplateActiveNamesAPI,
+  getDailyMissionGroupingsTemplate,
+  DailyMissionGroupingItem,
+} from "@/api/daily-mission/template/get";
 
 interface MissionCouponFormList {
   id?: MissionCouponGroupItem['id'];
@@ -72,7 +77,8 @@ const countOptions: SelectProps['options'] = [
 const MissionGroupForm = ({ data }: Props) => {
   const [form] = Form.useForm<FormData>();
   const navigate = useNavigate();
-  const [mcGroupItem, setMCGroupItem] = useState<MissionCouponGroupItem[]>([ 
+  const skipCountResetRef = useRef(false);
+  const [mcGroupItem, setMCGroupItem] = useState<MissionCouponGroupItem[]>([
     { item_type: 'mission', item_name: '', item_amount: 0, item_order: null },
     { item_type: 'mission', item_name: '', item_amount: 0, item_order: null },
     { item_type: 'mission', item_name: '', item_amount: 0, item_order: null },
@@ -84,6 +90,53 @@ const MissionGroupForm = ({ data }: Props) => {
   ]);
   const [toDelete, setToDelete] = useState<MissionCouponGroupItem[]>([]);
   const missionCount = Form.useWatch('mission_count', form);
+
+  // Template dropdown (create only): picking a template pre-fills name, mission count and items.
+  const { swr: templateNamesSwr } = getDailyMissionGroupTemplateActiveNamesAPI();
+  const templateOptions = templateNamesSwr.data?.data?.map((tpl) => ({ label: tpl.name, value: tpl.id })) ?? [];
+
+  const handleTemplatePick = async (value: number | undefined, option?: DefaultOptionType | DefaultOptionType[]) => {
+    if (!value) return;
+    try {
+      const res = await getDailyMissionGroupingsTemplate(value);
+      if (res.code !== 0) {
+        notification.error({ message: (res as { message?: string }).message ?? i18next.t("missionTemplate.loadFail") });
+        return;
+      }
+      const apiItems: DailyMissionGroupingItem[] = res.data ?? [];
+      const newMissionCount = apiItems.filter((i) => i.itemType === 'mission').length;
+
+      // itemAmount / itemPercentage arrive as decimal strings.
+      const mappedItems: MissionCouponFormList[] = apiItems.map((i) => ({
+        id: undefined,
+        item_type: i.itemType,
+        item_name: { value: i.itemId, label: i.itemName } as DefaultOptionType,
+        item_mission_type: i.missionType ? { label: i.missionType, value: i.functionName } as DefaultOptionType : undefined,
+        item_amount: Number(i.itemAmount),
+        item_order: i.itemOrder,
+      }));
+
+      const newGroupItems: MissionCouponGroupItem[] = apiItems.map((i) => ({
+        item_type: i.itemType,
+        item_name: i.itemName,
+        item_amount: Number(i.itemAmount),
+        item_order: i.itemOrder,
+      }));
+
+      const selectedOption = Array.isArray(option) ? option[0] : option;
+      // Stop the mission_count effect below from wiping the items we just set.
+      skipCountResetRef.current = newMissionCount !== missionCount;
+      form.setFieldsValue({
+        name: selectedOption?.label as string,
+        mission_count: newMissionCount,
+        items: mappedItems,
+      });
+      setMCGroupItem(newGroupItems);
+    } catch (error: any) {
+      console.error(error);
+      notification.error({ message: i18next.t("missionTemplate.loadFail") });
+    }
+  };
 
   const handleDelete = (item: MissionCouponGroupItem) => {
     console.log(item)
@@ -169,6 +222,10 @@ const MissionGroupForm = ({ data }: Props) => {
 
   useEffect(() => {
     if (data) return;
+    if (skipCountResetRef.current) {
+      skipCountResetRef.current = false;
+      return;
+    }
     const newMission: MissionCouponGroupItem = { item_type: 'mission', item_name: '', item_amount: 0, item_order: null };
     const newCoupon: MissionCouponGroupItem = { item_type: 'coupon', item_name: '', item_amount: 0, item_order: null };
     const newMissionCount = missionCount;
@@ -218,6 +275,25 @@ const MissionGroupForm = ({ data }: Props) => {
   return (
     <>
       <Form form={form} layout="vertical" onFinish={handleSubmit}>
+        {!data && (
+          <Row gutter={[16, 16]} style={{ marginBottom: 8 }}>
+            <Col span={8}>
+              <Form.Item label={i18next.t("missionTemplate.loadTemplate")} style={{ marginBottom: 0 }}>
+                <Select
+                  size="small"
+                  allowClear
+                  showSearch
+                  optionFilterProp="label"
+                  loading={templateNamesSwr.isLoading}
+                  options={templateOptions}
+                  onChange={handleTemplatePick}
+                  placeholder={i18next.t("missionTemplate.loadPlaceholder")}
+                  style={{ width: '100%' }}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+        )}
         <Row gutter={[16, 16]}>
           <Col>
             <Form.Item

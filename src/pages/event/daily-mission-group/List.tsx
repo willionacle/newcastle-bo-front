@@ -6,10 +6,13 @@ import DeleteBtn from "@/components/DeleteBtn";
 import EditBtn from "@/components/EditBtn";
 // import useDeleteItem from "@/hooks/useDeleteItem";
 import { OnHeaderCellType } from "@/hooks/useSort";
-import { Space, Table, TableProps } from "antd";
+import { Button, Space, Table, TableProps } from "antd";
 import { PaginationProps } from "antd/lib";
 import { useTranslation } from "react-i18next";
 import { deleteMission } from "@/api/daily-mission/delete";
+import { SaveOutlined } from "@ant-design/icons";
+import { useState } from "react";
+import SaveAsTemplateModal from "./components/SaveAsTemplateModal";
 interface Props {
   data: MissionGroupData[] | undefined;
   loading: boolean;
@@ -20,6 +23,7 @@ interface Props {
 
 const List = ({ data, loading, pagination, onHeaderCell, mutate }: Props) => {
   const { t } = useTranslation();
+  const [templateSource, setTemplateSource] = useState<MissionGroupData | null>(null);
   // const { deleteItem} = useDeleteItem('deleteEvent')
 
   // const handleDelete = (id: number) => {
@@ -88,7 +92,7 @@ const List = ({ data, loading, pagination, onHeaderCell, mutate }: Props) => {
       key: "action",
       align: "center",
       fixed: "right",
-      width:200,
+      width:300,
       render: (_, record) => {
         // const endDate = new Date(record.endhours).toISOString().split("T")[0];
         // const dateNow = new Date().toLocaleDateString('en-CA');
@@ -102,6 +106,13 @@ const List = ({ data, loading, pagination, onHeaderCell, mutate }: Props) => {
               link={`/event/daily-mission-group-setting/edit/${record.id}`}
             />
             )}
+            <Button
+              size="small"
+              icon={<SaveOutlined />}
+              onClick={() => setTemplateSource(record)}
+            >
+              {t("missionTemplate.saveAsTemplate")}
+            </Button>
             {/* <ResetBtn handleReset={() => handleDelete(Number(record.id))} label="관리자클리어" /> */}
             {(record.status == 0 || record.status == 1) && (
               <DeleteBtn
@@ -133,6 +144,12 @@ const List = ({ data, loading, pagination, onHeaderCell, mutate }: Props) => {
         scroll={{ x: `${import.meta.env.VITE_DEFALUT_TABLE_SCROLL}` }}
         tableLayout="auto"
         pagination={pagination}
+      />
+      <SaveAsTemplateModal
+        open={!!templateSource}
+        groupId={templateSource?.id}
+        defaultName={templateSource?.name}
+        onClose={() => setTemplateSource(null)}
       />
     </div>
   );

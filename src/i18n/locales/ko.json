@@ -318,7 +318,8 @@
     "attendanceSettings": "보상/설정",
     "attendanceLog": "출석 내역",
     "highStakesGroup": "고액배팅",
-    "highStakes": "설정/내역"
+    "highStakes": "설정/내역",
+    "missionGroupTemplate": "미션그룹 템플릿"
   },
   "topNavi": {
     "tn000": "00시 총보유",
@@ -948,7 +949,17 @@
     "adl007": "접속 IP",
     "adl008": "로그인 일시",
     "adl009": "로그아웃 일시",
-    "adl010": "상태"
+    "adl010": "상태",
+    "adl015": "최근 {{hours}}시간 내 미등록 IP에서 관리자 로그인 {{count}}건 (IP {{ips}}개)이 감지되었습니다.",
+    "adl016": "등록 IP 관리",
+    "adl017": "원칙적으로 미등록 IP는 백오피스 접속이 불가해야 합니다. 정상 IP는 아래에 등록해 주세요.",
+    "adl018": "메모",
+    "adl019": "등록 일시",
+    "adl020": "이 IP를 등록 목록에서 삭제하시겠습니까?",
+    "adl021": "등록",
+    "adl022": "닫기",
+    "ipAlreadyRegistered": "이미 등록된 IP입니다.",
+    "ipSuperAdminOnly": "IP 등록/삭제는 슈퍼관리자만 할 수 있습니다."
   },
   "storeSetting": {
     "ss000": "스토어 아에팀 관리 등록",
@@ -3307,5 +3318,58 @@
     "truncatedNotice": "대상 유저가 너무 많아 상위 {{max}}명까지만 표시됩니다.",
     "userCountShown": "표시 대상: {{n}}명",
     "noUsers": "해당 유저가 없습니다."
+  },
+  "sensitive": {
+    "authTitle": "민감정보 인증",
+    "authPrompt": "본인 관리자 로그인 비밀번호를 입력해 주세요.",
+    "authLabel": "관리자 비밀번호",
+    "authOk": "인증 후 진행",
+    "revealPhone": "전화번호 조회",
+    "revealWithdrawalAccount": "출금계좌 조회",
+    "revealUsdtWallet": "USDT 지갑 조회",
+    "hide": "숨기기",
+    "change": "변경",
+    "failed": "민감정보 조회에 실패했습니다.",
+    "wrongPassword": "비밀번호가 올바르지 않습니다. 다시 입력해 주세요.",
+    "tooManyAttempts": "시도 횟수를 초과했습니다. 잠시 후 다시 시도해 주세요.",
+    "sessionExpired": "조회 인증이 만료되었습니다. 비밀번호를 다시 입력해 주세요.",
+    "valueRequired": "값을 입력해 주세요.",
+    "newPhone": "새 전화번호",
+    "invalidPhone": "전화번호 형식이 올바르지 않습니다.",
+    "invalidWallet": "네트워크에 맞는 지갑 주소를 입력해 주세요. (TRC-20: T로 시작하는 34자, ERC-20: 0x + 40자리 16진수)",
+    "withdrawalNote": "출금계좌는 이 영역의 저장 버튼으로만 저장되며, 관리자 비밀번호 인증이 필요합니다. 수정하지 않은 항목은 기존 값이 유지되고, 비운 항목은 삭제됩니다.",
+    "withdrawalInvalid": "출금계좌 입력 항목을 확인해 주세요.",
+    "withdrawalNoChanges": "변경한 출금계좌 정보가 없습니다.",
+    "withdrawalMasked": "가려진 값(*)은 저장할 수 없습니다. 전체 값을 새로 입력해 주세요.",
+    "withdrawalSaved": "출금계좌 정보가 저장되었습니다.",
+    "withdrawalFailed": "출금계좌 저장에 실패했습니다.",
+    "withdrawalUnsaved": "저장되었습니다. 단, 출금계좌 변경 사항은 출금계좌 영역의 저장 버튼으로 따로 저장해야 합니다."
+  },
+  "loginLog": {
+    "onlyDuplicateIp": "중복 IP만",
+    "onlyDuplicateIpHint": "다른 회원 계정이 한 번이라도 사용한 IP의 로그인만 표시합니다 (전체 기간 기준).",
+    "duplicateIpHint": "여러 회원이 사용한 IP입니다. 클릭하면 사용 회원 목록을 봅니다.",
+    "usersByIp": "IP 사용 회원",
+    "loginCount": "로그인 횟수",
+    "lastLoginAt": "최근 로그인"
+  },
+  "overdueDeposit": {
+    "label": "{{who}} - 입금신청 {{amount}}원 ({{elapsed}} 경과)",
+    "elapsedMinSec": "{{m}}분 {{s}}초",
+    "elapsedMin": "{{m}}분"
+  },
+  "missionTemplate": {
+    "title": "미션그룹 템플릿 관리",
+    "name": "템플릿 이름",
+    "itemCount": "아이템 수",
+    "createFromGroup": "기존 그룹으로 템플릿 생성",
+    "saveAsTemplate": "템플릿으로 저장",
+    "sourceGroup": "원본 미션그룹",
+    "selectGroup": "미션그룹을 선택하세요",
+    "enterName": "템플릿 이름을 입력하세요",
+    "rename": "이름 변경",
+    "loadTemplate": "그룹 템플릿 불러오기",
+    "loadPlaceholder": "템플릿을 선택하면 아이템이 자동 채워집니다",
+    "loadFail": "템플릿 로드 실패"
   }
 }

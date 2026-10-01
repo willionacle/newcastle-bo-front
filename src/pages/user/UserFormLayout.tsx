@@ -6,13 +6,15 @@ import ReferralUserSelect from "@/components/ReferralUserSelect";
 import SaveBtn from "@/components/SaveBtn";
 import UserGameSettings from "@/components/UserGameSettings";
 import UserStatusSelector from "@/components/UserStatusSelector";
-import { Checkbox, Col, Divider, Form, Input, Row, Select, Space } from "antd";
+import { Checkbox, Col, Divider, Form, Input, Row, Select, Space, Typography } from "antd";
 import type { FormInstance } from "antd/es/form";
 import Password from "antd/lib/input/Password";
 import { TFunction } from "i18next";
 import { ResUser } from "@/api/types";
 import UserRollingForm from "./UserRollingForm";
 import { DepositMethodOption, UserFormValues } from "./UserForm.types";
+import { SetPasswordButton } from "./Tabs/infomation/components/MemberSessionActions";
+import { isMaskedValue, isValidWalletAddress } from "@/utils/withdrawalAccountUpdate";
 
 interface UserFormLayoutProps {
   form: FormInstance<UserFormValues>;
@@ -28,6 +30,11 @@ interface UserFormLayoutProps {
   onRollingOptionChange: (value: string) => void;
   onLossingOptionChange: (value: string) => void;
   onSubmit: (values: UserFormValues) => Promise<void>;
+  /** Editing an ordinary member (not an agent, not a new record). */
+  isMember?: boolean;
+  /** Saves the 출금계좌 panel through PATCH /api/users/:id/withdrawal-account. */
+  onWithdrawalSave?: () => void;
+  onValuesChange?: (changed: Partial<UserFormValues>) => void;
 }
 
 const UserFormLayout = ({
@@ -44,9 +51,12 @@ const UserFormLayout = ({
   onRollingOptionChange,
   onLossingOptionChange,
   onSubmit,
+  isMember = false,
+  onWithdrawalSave,
+  onValuesChange,
 }: UserFormLayoutProps) => {
   return (
-    <Form className="user-form" form={form} layout="vertical" onFinish={onSubmit}>
+    <Form className="user-form" form={form} layout="vertical" onFinish={onSubmit} onValuesChange={onValuesChange}>
       <Panel title={i18next.t("title.accountInfo")}>
         <Row gutter={16}>
           <Col span={8}>
@@ -59,7 +69,17 @@ const UserFormLayout = ({
             </Form.Item>
           </Col>
 
-          {user && (
+          {isMember && (
+            // Members: 비밀번호 재설정 (PATCH /api/users/:username/password) —
+            // the general save never carries a password.
+            <Col span={8}>
+              <Form.Item label={i18next.t("col.password")}>
+                <SetPasswordButton username={user?.username} />
+              </Form.Item>
+            </Col>
+          )}
+
+          {user && !isMember && (
             <Col
               span={8}
               style={{
@@ -97,15 +117,19 @@ const UserFormLayout = ({
           <Col span={8}>
             <UserStatusSelector />
           </Col>
-          <Col span={8}>
-            <Form.Item
-              name="phone_number"
-              label={t("memberInfoEdit.mie003")}
-              rules={[{ required: true }]}
-            >
-              <Input />
-            </Form.Item>
-          </Col>
+          {/* Members: the phone is revealed / changed on the member detail
+              page (access password required), never through this save. */}
+          {!isMember && (
+            <Col span={8}>
+              <Form.Item
+                name="phone_number"
+                label={t("memberInfoEdit.mie003")}
+                rules={[{ required: true }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+          )}
 
           <Col span={8}>
             <AgentSelect label={t("memberInfoEdit.mie005")} initialValue={user?.agent_username} />
@@ -256,6 +280,11 @@ const UserFormLayout = ({
       </Panel>
 
       <Panel title={i18next.t("memberInfoEdit.mie023")}>
+        {isMember && (
+          <Typography.Paragraph type="secondary">
+            {t("sensitive.withdrawalNote")}
+          </Typography.Paragraph>
+        )}
         <Row gutter={16}>
           {user && (
             <Col span={24}>
@@ -275,7 +304,7 @@ const UserFormLayout = ({
             <Form.Item
               label={t("memberInfoEdit.mie024")}
               name="bank_name"
-              rules={[{ required: true }]}
+              rules={[{ required: !user }]}
             >
               <Input />
             </Form.Item>
@@ -285,7 +314,7 @@ const UserFormLayout = ({
             <Form.Item
               label={t("memberInfoEdit.mie025")}
               name="account_number"
-              rules={[{ required: true }]}
+              rules={[{ required: !user }]}
             >
               <Input />
             </Form.Item>
@@ -295,7 +324,7 @@ const UserFormLayout = ({
             <Form.Item
               label={t("memberInfoEdit.mie026")}
               name="account_name"
-              rules={[{ required: true }]}
+              rules={[{ required: !user }]}
             >
               <Input />
             </Form.Item>
@@ -311,12 +340,34 @@ const UserFormLayout = ({
           </Col>
 
           <Col span={8}>
-            <Form.Item label={t("col.usdtAddress")} name="wallet_address" initialValue={null}>
-              <Input allowClear />
+            <Form.Item
+              label={t("col.usdtAddress")}
+              name="wallet_address"
+              initialValue={null}
+              dependencies={["network"]}
+              rules={[
+                ({ getFieldValue }) => ({
+                  validator: (_, value) =>
+                    // A masked echo or the stored, untouched pair is left alone,
+                    // so an unrelated save is never blocked by old data.
+                    isMaskedValue(value) ||
+                    (!!user && value === user.wallet_address && getFieldValue("network") === user.network) ||
+                    isValidWalletAddress(getFieldValue("network"), value)
+                      ? Promise.resolve()
+                      : Promise.reject(new Error(t("sensitive.invalidWallet"))),
+                }),
+              ]}
+            >
+              <Input allowClear autoComplete="off" />
             </Form.Item>
           </Col>
         </Row>
-        <SaveBtn className="user-button" size="middle" />
+        <SaveBtn
+          className="user-button"
+          size="middle"
+          type={isMember ? "button" : "submit"}
+          onClick={isMember ? onWithdrawalSave : undefined}
+        />
       </Panel>
 
       {user && (

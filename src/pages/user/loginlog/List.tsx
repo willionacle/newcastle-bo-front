@@ -1,93 +1,66 @@
-import { LoginRecords } from "@/api/login-records/get";
+import { LoginRecords2, UserByIp, getUsersByIp } from "@/api/login-records/get";
 import DateText from "@/components/DateText";
-import IPLocation from "@/components/IpLocation";
+import MemberStatus from "@/components/MemberStatus";
 import { OnHeaderCellType } from "@/hooks/useSort";
-import { Table, TableProps } from "antd";
+import { Modal, Table, TableProps, Tooltip } from "antd";
 import { PaginationProps } from "antd/lib";
-import { parse } from "qs";
-import { useEffect, useMemo, useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 interface Props {
-  data: LoginRecords[] | undefined;
+  data: LoginRecords2[] | undefined;
   loading: boolean;
   pagination: PaginationProps;
   onHeaderCell: OnHeaderCellType;
 }
 
-interface QueryData {
-  ip: string;
-  username: string;
-}
-
-interface LoginData {
-  ip: string;
-}
+/**
+ * Region text. Prefer the backend's readable `ip_location`; otherwise fall back
+ * to the stored geo JSON (`{"country":"KR","city":...}`). Never throws on a
+ * malformed value — the shared IPLocation component does a raw JSON.parse.
+ */
+const regionText = (record: LoginRecords2) => {
+  if (record.ip_location) return record.ip_location;
+  if (!record.geo_location) return "-";
+  try {
+    const geo = JSON.parse(record.geo_location);
+    if (geo && typeof geo === "object") {
+      const parts = [geo.city, geo.region, geo.country].filter(Boolean);
+      return parts.length ? parts.join(", ") : "-";
+    }
+    return String(geo);
+  } catch {
+    return record.geo_location;
+  }
+};
 
 const List = ({ data, loading, onHeaderCell, pagination }: Props) => {
   const { t } = useTranslation();
-  const { search } = useLocation();
-  const [query, setQuery] = useState<QueryData>();
+  const [ipModalOpen, setIpModalOpen] = useState(false);
+  const [selectedIp, setSelectedIp] = useState<string>("");
+  const [ipUsers, setIpUsers] = useState<UserByIp[]>([]);
+  const [ipUsersLoading, setIpUsersLoading] = useState(false);
+  // Ignore a slow answer for an IP the operator has already moved away from
+  const requestedIpRef = useRef<string>("");
 
-  const filteredData = useMemo(() => {
-    const newData = data?.filter((item) => !item.is_admin);
-    const searchParams = parse(search.replace("?", "")) as unknown as QueryData;
-    const ip = searchParams?.ip;
-    if (!ip) {
-      return newData;
-    }
-
-    const uniqueUsers = new Map<string, LoginRecords>();
-
-    if (ip) {
-      newData?.forEach((record) => {
-        if (record.ip === ip) {
-          const existingRecord = uniqueUsers.get(record.user);
-          if (
-            !existingRecord ||
-            new Date(record.login_date_time) >
-              new Date(existingRecord.login_date_time)
-          ) {
-            uniqueUsers.set(record.user, record);
-          }
-        }
-      });
-
-      const result = [...uniqueUsers.values()];
-
-      return result;
-    }
-  }, [query, data]);
-
-  const handleColor = ({ user, ip }: LoginRecords) => {
-    if (query && query.username && query.ip) {
-      const bool = query.username !== user || query.ip !== ip;
-      return bool ? "var(--ant-color-error-text)" : "";
-    } else {
-      return "";
+  const handleIpClick = async (ip: string) => {
+    requestedIpRef.current = ip;
+    setSelectedIp(ip);
+    setIpUsers([]);
+    setIpModalOpen(true);
+    setIpUsersLoading(true);
+    try {
+      const users = await getUsersByIp(ip);
+      if (requestedIpRef.current === ip) setIpUsers(users);
+    } catch {
+      // The global interceptor already reports HTTP errors
+    } finally {
+      if (requestedIpRef.current === ip) setIpUsersLoading(false);
     }
   };
 
-  const countOccurrences = (columnKey: keyof LoginData) => {
-    const counts: Record<string, number> = {};
-    if (data) {
-      data.forEach((item) => {
-        const value = item[columnKey];
-        counts[value] = (counts[value] || 0) + 1;
-      });
-      return counts;
-    }
-  };
-
-  const nameCounts = countOccurrences("ip");
-
-  const columnsArray: TableProps<LoginRecords>["columns"] = [
-    // {
-    //   title: "#",
-    //   dataIndex: "id",
-    //   align: "center",
-    // },
+  const columnsArray: TableProps<LoginRecords2>["columns"] = [
     {
       title: "No",
       align: "center",
@@ -101,12 +74,7 @@ const List = ({ data, loading, onHeaderCell, pagination }: Props) => {
       dataIndex: "user",
       align: "center",
       render: (value, record) => (
-        <Link
-          to={`/user/${record.user_id}`}
-          style={{ color: handleColor(record) }}
-        >
-          {value}
-        </Link>
+        <Link to={`/user/${record.user_id}`}>{value}</Link>
       ),
     },
     {
@@ -114,26 +82,36 @@ const List = ({ data, loading, onHeaderCell, pagination }: Props) => {
       dataIndex: "user_real_name",
       key: "user_real_name",
       align: "center",
-      // render: (_, record) => <ColorizeUsername username={record.user} returnRealName />
     },
     {
       title: t("adminLog.adl007"),
       dataIndex: "ip",
       align: "center",
-      render: (value, _record) => ({
-        props: {
-          style: {
-            color: nameCounts && (nameCounts[value] > 1 ? "red" : "inherit"),
-          },
-        },
-        children: (
-          <span
-          // style={{color: handleColor(record)}}
-          >
-            {value}
-          </span>
-        ),
-      }),
+      render: (value: string, record) => {
+        // has_duplicate_ip is all-time: the IP has been used by another member account, ever
+        const isDuplicate = Number(record.has_duplicate_ip) === 1;
+        return isDuplicate ? (
+          <Tooltip title={t("loginLog.duplicateIpHint")}>
+            <span
+              role="button"
+              tabIndex={0}
+              style={{
+                color: "var(--ant-color-error-text)",
+                cursor: "pointer",
+                textDecoration: "underline",
+              }}
+              onClick={() => handleIpClick(value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleIpClick(value);
+              }}
+            >
+              {value}
+            </span>
+          </Tooltip>
+        ) : (
+          <span>{value}</span>
+        );
+      },
     },
     {
       title: t("adminLog.adl008"),
@@ -143,9 +121,9 @@ const List = ({ data, loading, onHeaderCell, pagination }: Props) => {
     },
     {
       title: t("col.region"),
-      dataIndex: "geo_location",
+      dataIndex: "ip_location",
       align: "center",
-      render: (value: string) => <IPLocation ip={value} />,
+      render: (_value, record) => regionText(record),
     },
     {
       title: t("adminLog.adl010"),
@@ -166,27 +144,75 @@ const List = ({ data, loading, onHeaderCell, pagination }: Props) => {
     item.key !== "action" && item.key ? { ...item, onHeaderCell } : item,
   );
 
-  useEffect(() => {
-    const searchParams = parse(search.replace("?", "")) as unknown as QueryData;
-
-    if (searchParams && searchParams.ip && searchParams.username) {
-      setQuery(searchParams);
-    } else {
-      setQuery(undefined);
-    }
-  }, [search]);
+  const ipUserColumns: TableProps<UserByIp>["columns"] = [
+    {
+      title: t("ID"),
+      dataIndex: "user",
+      align: "center",
+      render: (value, record) => (
+        <Link to={`/user/${record.user_id}`} onClick={() => setIpModalOpen(false)}>
+          {value}
+        </Link>
+      ),
+    },
+    {
+      title: t("memberInfo.mi006"),
+      dataIndex: "user_real_name",
+      align: "center",
+      render: (value: string | null) => value || "-",
+    },
+    {
+      // Text status on this backend (ACTIVE, SUSPENDED, ...)
+      title: t("adminLog.adl010"),
+      dataIndex: "user_status",
+      align: "center",
+      render: (value: string | null) => <MemberStatus value={value} />,
+    },
+    {
+      title: t("loginLog.loginCount"),
+      dataIndex: "login_count",
+      align: "center",
+      render: (value: number | undefined) =>
+        value === undefined || value === null ? "-" : Number(value).toLocaleString(),
+    },
+    {
+      title: t("loginLog.lastLoginAt"),
+      dataIndex: "last_login_at",
+      align: "center",
+      render: (value: string | null) =>
+        value ? <DateText date={value} timeStamp /> : "-",
+    },
+  ];
 
   return (
-    <Table
-      sticky
-      dataSource={filteredData}
-      rowKey={"id"}
-      loading={loading}
-      columns={columns}
-      tableLayout="auto"
-      scroll={{ x: `${import.meta.env.VITE_DEFALUT_TABLE_SCROLL}` }}
-      pagination={pagination}
-    />
+    <>
+      <Table
+        sticky
+        dataSource={data}
+        rowKey={"id"}
+        loading={loading}
+        columns={columns}
+        tableLayout="auto"
+        scroll={{ x: `${import.meta.env.VITE_DEFALUT_TABLE_SCROLL}` }}
+        pagination={pagination}
+      />
+      <Modal
+        open={ipModalOpen}
+        onCancel={() => setIpModalOpen(false)}
+        footer={null}
+        title={`${t("loginLog.usersByIp")} — IP: ${selectedIp}`}
+        width={640}
+      >
+        <Table
+          dataSource={ipUsers}
+          rowKey={(r) => `${r.user_id}-${r.user}`}
+          loading={ipUsersLoading}
+          columns={ipUserColumns}
+          pagination={false}
+          size="small"
+        />
+      </Modal>
+    </>
   );
 };
 

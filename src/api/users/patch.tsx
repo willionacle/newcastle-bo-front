@@ -81,3 +81,36 @@ export const setUserPasswordAPI = async (
 
   return data;
 };
+
+// NEWCASTLE_HANDOFF_FRONTEND_INTEGRATION §2.3 — single-field inline member
+// edits; the target member's id goes in the body, one field per call.
+// `accessPassword` (the admin's own login password) is required for every
+// field except `telcode`; missing/wrong → 403, too many attempts → 429.
+// Password changes deliberately do NOT go through here: the member detail
+// page uses 비밀번호 재설정 (setUserPasswordAPI above), which also shows the
+// generated password once and reports `signedOut`.
+export type PatchUserRequest = { id: number } & (
+  | { telcode: string; accessPassword?: string }
+  | { phone_number: string; accessPassword: string }
+  | { bank_name: string; accessPassword: string }
+  | { account_number: string; accessPassword: string }
+);
+
+export const patchUserAPI = async (
+  body: PatchUserRequest
+): Promise<{ code: number; message: string }> => {
+  const token = useUserStore.getState().token;
+
+  const { data } = await instance.patch<{ code: number; message: string }>(
+    "/api/users",
+    body,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      silent: true,
+    }
+  );
+
+  return data;
+};

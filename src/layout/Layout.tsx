@@ -11,6 +11,7 @@ import {
 } from "./LayoutStyle";
 import { siderMaskStyle } from "./sideNav/SideNavStyle";
 import { heartbeatAPI } from "@/api/custom/heartbeat";
+import { useSuspiciousAdminLoginAPI } from "@/api/admin-login-log/get";
 import useSocket from "@/hooks/useSocket";
 import { createSharedSocket } from "@/utils/sharedSocket";
 import { notification } from "antd";
@@ -38,6 +39,8 @@ const Layout = ({ children }: Props) => {
   }, [breakpoint]);
   heartbeatAPI();
   useSocket();
+  // Fills the ⚠ badge on the 관리자 로그인 로그 side-menu item (polls every 3 min)
+  useSuspiciousAdminLoginAPI();
   const token = useUserStore.getState().token;
 
   useEffect(() => {

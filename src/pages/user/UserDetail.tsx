@@ -31,6 +31,7 @@ import AppliedRulesPanel from "@/components/transaction-rules/AppliedRulesPanel"
 import UserSearchSelect from "@/components/UserSearchSelect";
 import MessageLog from "./Tabs/messageLog/MessageLog";
 import UpdateLog from "./Tabs/updateLog/UpdateLog";
+import { SensitiveViewProvider } from "@/components/SensitiveViewProvider";
 // import LuckyWheelCoupon from "../promotion/lucky-wheel/tabs/CouponsTab";
 
 const UserDetail = () => {
@@ -318,4 +319,15 @@ const UserDetail = () => {
   );
 };
 
-export default UserDetail;
+// Sensitive-data view tokens live only while this member's page is open;
+// keying by the route id drops them when the operator moves to another member.
+const UserDetailPage = () => {
+  const { id } = useParams();
+  return (
+    <SensitiveViewProvider key={id}>
+      <UserDetail />
+    </SensitiveViewProvider>
+  );
+};
+
+export default UserDetailPage;

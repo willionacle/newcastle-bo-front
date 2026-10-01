@@ -91,6 +91,7 @@ import AgentPeriod from "@/pages/statistic/agent-period/AgentPeriod";
 import MissionGroupCreate from "@/pages/event/daily-mission-group/MissionGroupCreate";
 import MissionGroupEdit from "@/pages/event/daily-mission-group/MissionEdit";
 import DailyMissionGroupSetting from "@/pages/event/daily-mission-group/DailyMissionGroupSetting";
+import MissionGroupTemplate from "@/pages/event/daily-mission-group-template/MissionGroupTemplate";
 import MissionCoupon from "@/pages/event/mission-coupon-item/MissionCoupon";
 import MissionCouponCreate from "@/pages/event/mission-coupon-item/MissionCouponCreate";
 import MissionCouponEdit from "@/pages/event/mission-coupon-item/MissionCouponEdit";
@@ -561,6 +562,10 @@ const CreateRouter = () => {
                   element: <MissionGroupEdit />,
                 },
               ],
+            },
+            {
+              path: "daily-mission-group-template",
+              element: <MissionGroupTemplate />,
             },
             {
               path: "mission-coupon-setting",

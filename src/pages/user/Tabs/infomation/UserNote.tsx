@@ -1,4 +1,5 @@
 import { Col, Form, Input, Row, notification } from "antd";
+import { ordinaryUserUpdate } from "@/utils/ordinaryUserUpdate";
 import i18next from "@/i18n/i18n";
 import { noteTextareaStyle } from "./UserNoteStyle";
 import { useTranslation } from "react-i18next";
@@ -85,13 +86,13 @@ const UserNote = ({ data, id, mutate }: Props) => {
     });
 
     try {
-      const res = await api.updateUser({
+      const res = await api.updateUser(ordinaryUserUpdate({
         ...data,
         userid: userid,
         password: undefined,
         local_grade_config: data.local_grade_config ?? "automatic",
         ...memos,
-      }, token);
+      }), token);
 
       if (res.data.code == 0) {
         notification.success({

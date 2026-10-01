@@ -10,8 +10,18 @@ import { useNavigate } from "react-router-dom";
 import UserFormLayout from "./UserFormLayout";
 import { DepositMethodOption, UserFormProps, UserFormValues } from "./UserForm.types";
 import { mergeUserMemos } from "@/utils/userMemo";
+import { ordinaryUserUpdate } from "@/utils/ordinaryUserUpdate";
+import {
+  isMaskedValue,
+  WithdrawalAccountUpdate,
+  withdrawalAccountUpdate,
+  withdrawalFields,
+} from "@/utils/withdrawalAccountUpdate";
+import { updateWithdrawalAccountAPI } from "@/api/users/sensitive";
+import { classifySensitiveError } from "@/utils/sensitiveError";
+import SensitivePasswordModal from "@/components/SensitivePasswordModal";
 
-const UserForm = ({ user }: UserFormProps) => {
+const UserForm = ({ user, mutate }: UserFormProps) => {
   const { token, userid } = useUserStore.getState();
   const { t } = useTranslation();
   const [form] = Form.useForm<UserFormValues>();
@@ -32,6 +42,65 @@ const UserForm = ({ user }: UserFormProps) => {
       })) ?? []
     );
   }, [depositAccountData]);
+
+  // Ordinary members: password, phone and the withdrawal account are not part
+  // of the general save (PUT /api/users keeps fields it is not sent —
+  // NEWCASTLE_HANDOFF §2.4). They change through their own access-password
+  // protected endpoints. Agents keep the old /updateagent behaviour.
+  const isMember = !!user && user.role_name !== "agent";
+
+  // Track user input only: setFieldsValue also marks fields touched in antd.
+  const [withdrawalChanges, setWithdrawalChanges] = useState<Set<string>>(new Set());
+  const [pendingWithdrawalUpdate, setPendingWithdrawalUpdate] = useState<WithdrawalAccountUpdate | null>(null);
+  const trackWithdrawalChanges = (changed: object) => {
+    const keys = Object.keys(changed).filter((key) => (withdrawalFields as string[]).includes(key));
+    if (keys.length) setWithdrawalChanges((previous) => new Set([...previous, ...keys]));
+  };
+
+  const requestWithdrawalSave = async () => {
+    let values: Partial<UserFormValues>;
+    try {
+      values = await form.validateFields(withdrawalFields);
+    } catch {
+      notification.error({ message: t("sensitive.withdrawalInvalid") });
+      return;
+    }
+    const payload = withdrawalAccountUpdate(values, (key) => withdrawalChanges.has(key));
+    if (!Object.keys(payload).length) {
+      notification.info({ message: t("sensitive.withdrawalNoChanges") });
+      return;
+    }
+    const masked = (["bankName", "accountNumber", "accountName", "walletAddress"] as const).some((key) =>
+      isMaskedValue(payload[key])
+    );
+    if (masked) {
+      notification.warning({ message: t("sensitive.withdrawalMasked") });
+      return;
+    }
+    setPendingWithdrawalUpdate(payload);
+  };
+
+  /** Resolves with an inline error message, or nothing on success. */
+  const saveWithdrawalAccount = async (accessPassword: string): Promise<string | void> => {
+    if (!user || !pendingWithdrawalUpdate) return;
+    try {
+      const res = await updateWithdrawalAccountAPI(user.id, pendingWithdrawalUpdate, accessPassword);
+      if (res.code !== 0) return res.message || t("sensitive.withdrawalFailed");
+      setWithdrawalChanges(new Set());
+      setPendingWithdrawalUpdate(null);
+      notification.success({
+        message: res.data?.changed?.length === 0
+          ? t("sensitive.withdrawalNoChanges")
+          : t("sensitive.withdrawalSaved"),
+      });
+      mutate?.();
+    } catch (error) {
+      const { kind, message } = classifySensitiveError(error);
+      if (kind === "auth") return message || t("sensitive.wrongPassword");
+      if (kind === "rateLimited") return message || t("sensitive.tooManyAttempts");
+      return message || t("sensitive.withdrawalFailed");
+    }
+  };
 
   const handleSubmit = async (formValues: UserFormValues) => {
     const bodyData: PostCreateUserBody = {
@@ -69,8 +138,7 @@ const UserForm = ({ user }: UserFormProps) => {
     try {
       if (user) {
         const isAgent = user.role_name === "agent";
-        const response = await api[!isAgent ? "updateUser" : "updateAgent"](
-          {
+        const body = {
             ...user,
             // Agent records only define user_memo_1, so they must not be merged.
             ...(isAgent ? {} : mergeUserMemos(user)),
@@ -110,9 +178,10 @@ const UserForm = ({ user }: UserFormProps) => {
             dw_sum: user.dwSum ?? 0,
             isAllowedAccountWithdrawal: formValues.isAllowedAccountWithdrawal,
             isAllowedOncashWithdrawal: formValues.isAllowedOncashWithdrawal,
-          },
-          token
-        );
+          };
+        const response = isAgent
+          ? await api.updateAgent(body, token)
+          : await api.updateUser(ordinaryUserUpdate(body), token);
 
         const {
           data: { code, message },
@@ -120,7 +189,14 @@ const UserForm = ({ user }: UserFormProps) => {
 
         if (code === 0) {
           notification.success({ message: "Edit Success!" });
-          navigate(-1);
+          const unsavedWithdrawal = isMember &&
+            [...withdrawalChanges].some((key) => key !== "isAllowedAccountWithdrawal" && key !== "isAllowedOncashWithdrawal");
+          if (unsavedWithdrawal) {
+            // The general save never carries the account; keep the operator here.
+            notification.warning({ message: t("sensitive.withdrawalUnsaved") });
+          } else {
+            navigate(-1);
+          }
         } else {
           notification.error({ message: message });
         }
@@ -266,6 +342,13 @@ const UserForm = ({ user }: UserFormProps) => {
   }, [depositAccountData, form]);
 
   return (
+    <>
+    {pendingWithdrawalUpdate && (
+      <SensitivePasswordModal
+        onConfirm={saveWithdrawalAccount}
+        onCancel={() => setPendingWithdrawalUpdate(null)}
+      />
+    )}
     <UserFormLayout
       form={form}
       user={user}
@@ -280,7 +363,11 @@ const UserForm = ({ user }: UserFormProps) => {
       onRollingOptionChange={handleChangeRollingOption}
       onLossingOptionChange={handleChangeLossingOption}
       onSubmit={handleSubmit}
+      isMember={isMember}
+      onWithdrawalSave={requestWithdrawalSave}
+      onValuesChange={trackWithdrawalChanges}
     />
+    </>
   );
 };
 

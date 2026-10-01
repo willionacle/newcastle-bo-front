@@ -21,8 +21,9 @@ import AdminAdjustment from "./AdminAdjustment";
 import Coupon from "./Coupon";
 // import { getEvoMoneyAPI, getPPMoneyAPI } from "@/api/transfer/get";
 import { ResUser } from "@/api/types";
-import { resetLoginAttemptsAPI, updateUserStatusAPI } from "@/api/users/patch";
-import PhoneButton from "@/components/PhoneButton";
+import { patchUserAPI, resetLoginAttemptsAPI, updateUserStatusAPI } from "@/api/users/patch";
+import SensitiveReveal from "@/components/SensitiveReveal";
+import InlineEditableField from "./components/InlineEditableField";
 import { GF } from "@/utils/GlobalFunctions";
 import { levelConfingAPI } from "@/api/level-configs/get";
 import UserRollingPointType from "./components/UserRollingPointType";
@@ -39,6 +40,18 @@ import { ImpersonateButton, SetPasswordButton } from "./components/MemberSession
 import GlobalForcedWithdrawalOff from "./components/GlobalForcedWithdrawalOff";
 // import FormItem from "antd/es/form/FormItem";
 // import { changePassword } from "@/api/users/post";
+
+const TELCODE_OPTIONS = [
+  { label: "SKT", value: "SKT" },
+  { label: "KT", value: "KT" },
+  { label: "LG U+", value: "LG U+" },
+  { label: "SKT(알뜰)", value: "SKT(알뜰)" },
+  { label: "KT(알뜰)", value: "KT(알뜰)" },
+  { label: "LG U+(알뜰)", value: "LG U+(알뜰)" },
+];
+
+// Digits with optional +, spaces or hyphens; the server has the final say.
+const PHONE_PATTERN = /^\+?[0-9][0-9\s-]{6,19}$/;
 
 interface Props {
   data: ResUser["data"] | undefined;
@@ -86,6 +99,8 @@ const UserInfo = ({ data, loading, mutate }: Props) => {
   const [isCouponOpen, setIsCouponOpen] = useState(false);
   const [isLuckyOpen, setIsLuckyOpen] = useState(false);
   const [depositMethodData, setDepositMethodData] = useState<DepositAccountResponse | null>(null);
+  // Remounts the phone reveal after an edit so a stale revealed number is dropped.
+  const [phoneRevision, setPhoneRevision] = useState(0);
 
   const handleSubmit = async (e: {
     user_status: ResUser["data"]["user_status"];
@@ -375,7 +390,16 @@ const UserInfo = ({ data, loading, mutate }: Props) => {
     { // left 7a
       key: "telcode",
       title: t("col.carrier"),
-      value: data?.telcode ?? "-",
+      value: data?.id ? (
+        <InlineEditableField
+          display={data?.telcode || "-"}
+          initialValue={data?.telcode ?? ""}
+          options={TELCODE_OPTIONS}
+          placeholder={t("col.carrier")}
+          onSave={(v) => patchUserAPI({ id: data.id, telcode: v })}
+          onSaved={() => mutate()}
+        />
+      ) : (data?.telcode ?? "-"),
     },
 
     // { // right 9
@@ -405,15 +429,23 @@ const UserInfo = ({ data, loading, mutate }: Props) => {
       key: "phone",
       title: t("memberDetail.mis017"),
       // value: phone_number,
-      value: (
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <PhoneButton
-            className="user-button alt"
-            style={{ marginTop: 6 }}
-            data={{ username }}
-          />
-        </div>
-      ),
+      // Revealed through POST /api/users/:id/sensitive/reveal (also written
+      // to the 전화번호 확인 log); edited through PATCH /api/users.
+      value: data?.id ? (
+        <InlineEditableField
+          display={<SensitiveReveal key={phoneRevision} userId={data.id} field="phone" />}
+          placeholder={t("sensitive.newPhone")}
+          requireSensitivePassword
+          validate={(v) => (PHONE_PATTERN.test(v) ? undefined : t("sensitive.invalidPhone"))}
+          onSave={(v, accessPassword) =>
+            patchUserAPI({ id: data.id, phone_number: v, accessPassword: accessPassword ?? "" })
+          }
+          onSaved={() => {
+            setPhoneRevision((r) => r + 1);
+            mutate();
+          }}
+        />
+      ) : "-",
     },
 
     { // right 10
@@ -447,7 +479,7 @@ const UserInfo = ({ data, loading, mutate }: Props) => {
     { // left 10
       key: "depositAccount",
       title: t("col.withdrawalAccountInfo"),
-      value: `${data?.bank_name} ${data?.account_number}`,
+      value: data?.id ? <SensitiveReveal userId={data.id} field="withdrawalAccount" /> : "-",
     },
 
     { // right 12
@@ -465,7 +497,7 @@ const UserInfo = ({ data, loading, mutate }: Props) => {
     { // left 11
       key: "usdtAccount",
       title: t("col.usdtWalletAddress"),
-      value: data?.wallet_address ?? "-",
+      value: data?.id ? <SensitiveReveal userId={data.id} field="usdtWallet" /> : "-",
     },
 
     

@@ -1,4 +1,5 @@
 import { Switch, Popconfirm, Flex, notification } from "antd";
+import { ordinaryUserUpdate } from "@/utils/ordinaryUserUpdate";
 import i18next from "@/i18n/i18n";
 import { useState } from "react";
 import { api } from "@/api/axios";
@@ -27,7 +28,7 @@ const ForceWithdrawToggle = ({
     try {
       if (data) {
         const res = await api.updateUser(
-          {
+          ordinaryUserUpdate({
             ...data,
             // The spread re-sends every memo column; normalize so a stale
             // snapshot cannot resurrect a merged-away memo.
@@ -36,7 +37,7 @@ const ForceWithdrawToggle = ({
             password: undefined,
             local_grade_config: data.local_grade_config ?? "automatic",
             is_allowed_forced_withdrawal: newValue ? 1 : 0,
-          },
+          }),
           token,
         );
         if (res.data.code == 0) {

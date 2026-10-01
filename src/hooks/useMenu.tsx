@@ -21,7 +21,9 @@ import { stringify } from "qs";
 import topbarStore from "@/store/topbar.store";
 import useSiteProfileStore from "@/store/site-profile.store";
 import useAdminAccessStore from "@/store/admin-access.store";
+import adminIpAlertStore from "@/store/adminIpAlert.store";
 import { ReactElement } from "react";
+import AdminIpAlertBadge from "@/layout/sideNav/AdminIpAlertBadge";
 
 interface ChildrenProp {
   key: string;
@@ -30,6 +32,9 @@ interface ChildrenProp {
   badge?: number;
   menuNo?: number;
   icon?: React.ReactNode;
+  // Rendered after the label (e.g. the admin-IP ⚠ badge); `title` overrides the hover tooltip.
+  suffix?: React.ReactNode;
+  title?: string;
   children?: ChildrenProp[];
 }
 
@@ -56,6 +61,8 @@ const useMenu = () => {
   // but a definite true hides 관리자 계정 관리, so a privileged entry never
   // flashes in and back out while the page loads.
   const hideAdminAccountMenus = useAdminAccessStore.getState().isSuperAdmin !== true;
+  // Subscribed (not getState) so the badge appears/clears as soon as the poll answers.
+  const ipAlert = adminIpAlertStore();
   // 게임 관리 has to land on a lobby tab that survives the same filtering in
   // GameCategoryBtn (useCategoryVisibility) — first switched-on lobby wins,
   // in the order the tabs are rendered.
@@ -984,6 +991,17 @@ const useMenu = () => {
           key: "/admin/login-log",
           label: t("sidemenu.sm028"),
           menuNo: 54,
+          // Admin login from an unregistered IP in the last 24h -> visible right in the menu
+          suffix: ipAlert.hasAlert ? (
+            <AdminIpAlertBadge count={ipAlert.count} />
+          ) : undefined,
+          title: ipAlert.hasAlert
+            ? t("adminLog.adl015", {
+                hours: ipAlert.windowHours,
+                count: ipAlert.count,
+                ips: ipAlert.distinctIps,
+              })
+            : undefined,
         },
         {
           key: "/admin/sessions",

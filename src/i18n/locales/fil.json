@@ -318,7 +318,8 @@
     "attendanceSettings": "Reward/Setting",
     "attendanceLog": "Kasaysayan ng Pagpasok",
     "highStakesGroup": "Alerto sa Malaking Taya",
-    "highStakes": "Setting/Kasaysayan"
+    "highStakes": "Setting/Kasaysayan",
+    "missionGroupTemplate": "Mission Group Templates"
   },
   "topNavi": {
     "tn000": "Kabuuang Hawak sa 00:00",
@@ -948,7 +949,17 @@
     "adl007": "Access IP",
     "adl008": "Petsa/Oras ng Login",
     "adl009": "Petsa/Oras ng Logout",
-    "adl010": "Katayuan"
+    "adl010": "Katayuan",
+    "adl015": "{{count}} admin login(s) from {{ips}} unregistered IP(s) detected in the last {{hours}} hours.",
+    "adl016": "Registered IPs",
+    "adl017": "Unregistered IPs should not be able to access the back office. Register legitimate IPs below.",
+    "adl018": "Memo",
+    "adl019": "Registered At",
+    "adl020": "Remove this IP from the registered list?",
+    "adl021": "Register",
+    "adl022": "Close",
+    "ipAlreadyRegistered": "This IP is already registered.",
+    "ipSuperAdminOnly": "Only the super admin can add or remove registered IPs."
   },
   "storeSetting": {
     "ss000": "Irehistro ang Pamamahala ng Store Item",
@@ -3307,5 +3318,58 @@
     "truncatedNotice": "Too many users; only the first {{max}} are shown.",
     "userCountShown": "Showing: {{n}} users",
     "noUsers": "No users found."
+  },
+  "sensitive": {
+    "authTitle": "Sensitive data verification",
+    "authPrompt": "Enter your own admin login password.",
+    "authLabel": "Admin password",
+    "authOk": "Verify and continue",
+    "revealPhone": "Show phone number",
+    "revealWithdrawalAccount": "Show withdrawal account",
+    "revealUsdtWallet": "Show USDT wallet",
+    "hide": "Hide",
+    "change": "Change",
+    "failed": "Could not load the sensitive data.",
+    "wrongPassword": "Incorrect password. Please try again.",
+    "tooManyAttempts": "Too many attempts. Please try again later.",
+    "sessionExpired": "Your view session has expired. Please enter your password again.",
+    "valueRequired": "Please enter a value.",
+    "newPhone": "New phone number",
+    "invalidPhone": "The phone number format is invalid.",
+    "invalidWallet": "Enter a wallet address that matches the network (TRC-20: 34 characters starting with T, ERC-20: 0x + 40 hex digits).",
+    "withdrawalNote": "The withdrawal account is saved only with this section's Save button and requires your admin password. Fields you leave unchanged keep their stored values; fields you empty are cleared.",
+    "withdrawalInvalid": "Please check the withdrawal account fields.",
+    "withdrawalNoChanges": "No withdrawal account changes.",
+    "withdrawalMasked": "Masked values (*) cannot be saved. Enter the full value.",
+    "withdrawalSaved": "Withdrawal account saved.",
+    "withdrawalFailed": "Could not save the withdrawal account.",
+    "withdrawalUnsaved": "Saved. Withdrawal account changes must still be saved with the withdrawal account section's Save button."
+  },
+  "loginLog": {
+    "onlyDuplicateIp": "Duplicate IPs Only",
+    "onlyDuplicateIpHint": "Show only logins from IPs that another member account has ever used (all-time).",
+    "duplicateIpHint": "This IP has been used by multiple members. Click to see them.",
+    "usersByIp": "Members Using This IP",
+    "loginCount": "Login Count",
+    "lastLoginAt": "Last Login"
+  },
+  "overdueDeposit": {
+    "label": "{{who}} - deposit request ₩{{amount}} ({{elapsed}} elapsed)",
+    "elapsedMinSec": "{{m}}m {{s}}s",
+    "elapsedMin": "{{m}}m"
+  },
+  "missionTemplate": {
+    "title": "Mission Group Templates",
+    "name": "Template Name",
+    "itemCount": "Items",
+    "createFromGroup": "Create from Existing Group",
+    "saveAsTemplate": "Save as Template",
+    "sourceGroup": "Source Mission Group",
+    "selectGroup": "Select a mission group",
+    "enterName": "Enter a template name",
+    "rename": "Rename",
+    "loadTemplate": "Load Group Template",
+    "loadPlaceholder": "Pick a template to pre-fill the items",
+    "loadFail": "Failed to load template"
   }
 }

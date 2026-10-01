@@ -31,6 +31,7 @@ import { notification } from "antd";
 import useHighStakesAlerts from "@/hooks/useHighStakesAlerts";
 import HeaderHighStakes from "./HeaderHighStakes";
 import HeaderScreenshotModal from "./HeaderScreenshotModal";
+import OverdueDepositBar from "./OverdueDepositBar";
 import { proofReportSummaryAPI } from "@/api/proof-reports/get";
 
 interface Props {
@@ -185,6 +186,10 @@ const Header = ({ open, setOpen }: Props) => {
             {/* </SimpleBar> */}
 
             <Flex align="center" gap={4}>
+              {/* Overdue deposit requests (> 2m30s), Socket.IO depositPendingSnapshot */}
+              <Flex flex={1} justify="center" align="center" style={{ minWidth: 0, marginTop: 8 }}>
+                <OverdueDepositBar />
+              </Flex>
               <Button
                 type="text"
                 size="small"
@@ -335,6 +340,16 @@ const Header = ({ open, setOpen }: Props) => {
                   }}>{i18next.t("global.search")}</Button>
               </Form>
             </div>
+
+            {/* Overdue deposit requests (> 2m30s), Socket.IO depositPendingSnapshot */}
+            <Flex
+              flex={1}
+              justify="center"
+              align="center"
+              style={{ minWidth: 0 }}
+            >
+              <OverdueDepositBar />
+            </Flex>
 
             <div style={headerMoreControls}>
               <USDTExchangeRate />
