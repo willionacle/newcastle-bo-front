@@ -90,15 +90,10 @@ export const proofReportsAPI = () => {
       AxiosResponse<{
         code: number;
         message: string;
-        data: {
-          items: ProofReport[];
-          pagination: {
-            currentPage: number;
-            totalPages: number;
-            totalItems: number;
-            itemsPerPage: number;
-          };
-        };
+        data: ProofReport[];
+        page: number;
+        totalitems: number;
+        totalpage: number;
       }>
     >(`${url}?${query}`, {
       headers: {
@@ -107,8 +102,8 @@ export const proofReportsAPI = () => {
     });
 
     return {
-      data: res.data.data.items,
-      totalitems: res.data.data.pagination.totalItems,
+      data: res.data.data,
+      totalitems: res.data.totalitems,
     };
   };
 
