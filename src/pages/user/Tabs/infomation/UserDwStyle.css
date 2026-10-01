@@ -1,0 +1,38 @@
+.userinfo-table {
+  width: 100%;
+}
+
+.userinfo-table th {
+  /* background: var(--ant-color-bg-layout); */
+  width: 11.11%;
+}
+
+.userinfo-table td,
+.userinfo-table th {
+  line-height: 1.5rem;
+  padding-inline: 1rem;
+  text-align: center;
+  border: solid 1px var(--ant-color-split);
+  border-collapse: collapse;
+  padding: 0;
+}
+
+.userinfo-table.variant-orange th.top-th {
+  background-color: #fce4d681;
+}
+
+.userinfo-table.variant-green th.top-th {
+  background-color: #e2efda;
+}
+
+.userinfo-table.variant-blue th.top-th {
+  background-color: #ddebf7;
+}
+
+.userinfo-table.variant-purple th.top-th {
+  background-color: #e4dfec;
+}
+
+.userinfo-table.variant-lime th.top-th {
+  background-color: #ebf1de;
+}

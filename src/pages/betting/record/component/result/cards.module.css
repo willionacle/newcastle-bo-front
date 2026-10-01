@@ -1,0 +1,14 @@
+.FlipEnterActive {
+  animation: flip-in 0.6s;
+}
+.FlipLeaveActive {
+  animation: flip-in 0.6s reverse;
+}
+@keyframes flip-in {
+  0% {
+    transform: rotate3d(1, 1, 1, 120deg);
+  }
+  100% {
+    transform: rotate3d(1, 1, 1, 0deg);
+  }
+}

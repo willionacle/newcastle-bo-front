@@ -1,0 +1,11 @@
+.MenuIconWrapper {
+    display: flex;
+    padding: 6px;
+    border-radius: 6px;
+    width: 40px;
+    color: inherit;
+    text-decoration: none;
+}
+.MenuIconWrapper:hover {
+    background-color: #fae6ff;
+}

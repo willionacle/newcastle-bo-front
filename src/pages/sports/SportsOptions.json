@@ -1,0 +1,893 @@
+{
+  "sportsNameFilterOptions": [
+    {
+      "label": "전체",
+      "value": ""
+    },
+    {
+      "label": "축구",
+      "value": "soccer"
+    },
+    {
+      "label": "야구",
+      "value": "baseball"
+    },
+    {
+      "label": "농구",
+      "value": "basketball"
+    },
+    {
+      "label": "배구",
+      "value": "volleyball"
+    },
+    {
+      "label": "아이스하키",
+      "value": "icehockey"
+    },
+    {
+      "label": "핸드볼",
+      "value": "handball"
+    },
+    {
+      "label": "E-SPORTS",
+      "value": "esports"
+    },
+    {
+      "label": "미식축구",
+      "value": "americanfootball"
+    },
+    {
+      "label": "복싱/UFC",
+      "value": "boxingufc"
+    },
+    {
+      "label": "테니스",
+      "value": "tennis"
+    },
+    {
+      "label": "탁구",
+      "value": "tabletennis"
+    }
+  ],
+  "sportsNameMarketOptions": [
+    {
+      "label": "전체",
+      "value": "전체"
+    },
+    {
+      "label": "축구",
+      "value": "soccer"
+    },
+    {
+      "label": "야구",
+      "value": "baseball"
+    },
+    {
+      "label": "농구",
+      "value": "basketball"
+    },
+    {
+      "label": "배구",
+      "value": "volleyball"
+    },
+    {
+      "label": "아이스하키",
+      "value": "icehockey"
+    },
+    {
+      "label": "핸드볼",
+      "value": "handball"
+    },
+    {
+      "label": "E-SPORTS",
+      "value": "esports"
+    },
+    {
+      "label": "미식축구",
+      "value": "americanfootball"
+    },
+    {
+      "label": "복싱/UFC",
+      "value": "boxingufc"
+    },
+    {
+      "label": "테니스",
+      "value": "tennis"
+    },
+    {
+      "label": "탁구",
+      "value": "tabletennis"
+    }
+  ],
+  "sportsNameOptions": [
+    {
+      "label": "축구",
+      "value": "soccer"
+    },
+    {
+      "label": "야구",
+      "value": "baseball"
+    },
+    {
+      "label": "농구",
+      "value": "basketball"
+    },
+    {
+      "label": "배구",
+      "value": "volleyball"
+    },
+    {
+      "label": "아이스하키",
+      "value": "icehockey"
+    },
+    {
+      "label": "핸드볼",
+      "value": "handball"
+    },
+    {
+      "label": "E-SPORTS",
+      "value": "esports"
+    },
+    {
+      "label": "미식축구",
+      "value": "americanfootball"
+    },
+    {
+      "label": "복싱/UFC",
+      "value": "boxingufc"
+    },
+    {
+      "label": "테니스",
+      "value": "tennis"
+    },
+    {
+      "label": "탁구",
+      "value": "tabletennis"
+    }
+  ],
+  "gameTypeFilterOptions": [
+    {
+      "label": "전체",
+      "value": ""
+    },
+    {
+      "label": "크로스",
+      "value": "크로스"
+    },
+    {
+      "label": "승무패",
+      "value": "승무패"
+    },
+    {
+      "label": "핸디캡",
+      "value": "핸디캡"
+    },
+    {
+      "label": "스페셜",
+      "value": "스페셜"
+    },
+    {
+      "label": "라이브",
+      "value": "라이브"
+    }
+  ],
+  "gameTypeOptions": [
+    {
+      "label": "전체",
+      "value": "전체"
+    },
+    {
+      "label": "크로스",
+      "value": "크로스"
+    },
+    {
+      "label": "승무패",
+      "value": "승무패"
+    },
+    {
+      "label": "핸디캡",
+      "value": "핸디캡"
+    },
+    {
+      "label": "스페셜",
+      "value": "스페셜"
+    },
+    {
+      "label": "라이브",
+      "value": "라이브"
+    }
+  ],
+  "marketTypeOptions": [
+    {
+      "label": "전체",
+      "value": "전체"
+    },
+    {
+      "label": "승무패",
+      "value": "승무패"
+    },
+    {
+      "label": "승패",
+      "value": "승패"
+    },
+    {
+      "label": "핸디캡",
+      "value": "핸디캡"
+    },
+    {
+      "label": "언더오버",
+      "value": "언더오버"
+    },
+    {
+      "label": "득점",
+      "value": "득점"
+    },
+    {
+      "label": "더블찬스",
+      "value": "더블찬스"
+    },
+    {
+      "label": "양팀모두득점",
+      "value": "양팀모두득점"
+    },
+    {
+      "label": "첫킬",
+      "value": "첫킬"
+    },
+    {
+      "label": "첫용",
+      "value": "첫용"
+    },
+    {
+      "label": "첫바론",
+      "value": "첫바론"
+    },
+    {
+      "label": "첫타워",
+      "value": "첫타워"
+    },
+    {
+      "label": "킬 합계",
+      "value": "킬 합계"
+    },
+    {
+      "label": "킬 핸디캡",
+      "value": "킬 핸디캡"
+    },
+    {
+      "label": "킬 언더오버",
+      "value": "킬 언더오버"
+    },
+    {
+      "label": "경기시간 언더오버",
+      "value": "경기시간 언더오버"
+    }
+  ],
+  "marketFilterOptions": [
+    {
+      "label": "전체",
+      "value": ""
+    },
+    {
+      "label": "승무패",
+      "value": "승무패"
+    },
+    {
+      "label": "승패",
+      "value": "승패"
+    },
+    {
+      "label": "핸디캡",
+      "value": "핸디캡"
+    },
+    {
+      "label": "언더오버",
+      "value": "언더오버"
+    },
+    {
+      "label": "득점",
+      "value": "득점"
+    },
+    {
+      "label": "더블찬스",
+      "value": "더블찬스"
+    },
+    {
+      "label": "양팀모두득점",
+      "value": "양팀모두득점"
+    },
+    {
+      "label": "첫킬",
+      "value": "첫킬"
+    },
+    {
+      "label": "첫용",
+      "value": "첫용"
+    },
+    {
+      "label": "첫바론",
+      "value": "첫바론"
+    },
+    {
+      "label": "첫타워",
+      "value": "첫타워"
+    },
+    {
+      "label": "킬 합계",
+      "value": "킬 합계"
+    },
+    {
+      "label": "킬 핸디캡",
+      "value": "킬 핸디캡"
+    },
+    {
+      "label": "킬 언더오버",
+      "value": "킬 언더오버"
+    },
+    {
+      "label": "경기시간 언더오버",
+      "value": "경기시간 언더오버"
+    }
+  ],
+  "periodTypeOptions": [
+    {
+      "label": "전체",
+      "value": "전체"
+    },
+    {
+      "label": "연장제외",
+      "value": "연장제외"
+    },
+    {
+      "label": "연장포함",
+      "value": "연장포함"
+    },
+    {
+      "label": "전반전",
+      "value": "전반전"
+    },
+    {
+      "label": "후반전",
+      "value": "후반전"
+    },
+    {
+      "label": "1피리어드",
+      "value": "1피리어드"
+    },
+    {
+      "label": "2피리어드",
+      "value": "2피리어드"
+    },
+    {
+      "label": "3피리어드",
+      "value": "3피리어드"
+    },
+    {
+      "label": "1쿼터",
+      "value": "1쿼터"
+    },
+    {
+      "label": "2쿼터",
+      "value": "2쿼터"
+    },
+    {
+      "label": "3쿼터",
+      "value": "3쿼터"
+    },
+    {
+      "label": "4쿼터",
+      "value": "4쿼터"
+    },
+    {
+      "label": "1세트",
+      "value": "1세트"
+    },
+    {
+      "label": "2세트",
+      "value": "2세트"
+    },
+    {
+      "label": "3세트",
+      "value": "3세트"
+    },
+    {
+      "label": "4세트",
+      "value": "4세트"
+    },
+    {
+      "label": "5세트",
+      "value": "5세트"
+    },
+    {
+      "label": "1이닝",
+      "value": "1이닝"
+    },
+    {
+      "label": "2이닝",
+      "value": "2이닝"
+    },
+    {
+      "label": "3이닝",
+      "value": "3이닝"
+    },
+    {
+      "label": "4이닝",
+      "value": "4이닝"
+    },
+    {
+      "label": "5이닝",
+      "value": "5이닝"
+    },
+    {
+      "label": "6이닝",
+      "value": "6이닝"
+    },
+    {
+      "label": "7이닝",
+      "value": "7이닝"
+    },
+    {
+      "label": "8이닝",
+      "value": "8이닝"
+    },
+    {
+      "label": "9이닝",
+      "value": "9이닝"
+    },
+    {
+      "label": "3이닝합계",
+      "value": "3이닝합계"
+    },
+    {
+      "label": "5이닝합계",
+      "value": "5이닝합계"
+    },
+    {
+      "label": "7이닝합계",
+      "value": "7이닝합계"
+    }
+  ],
+  "betTypeOptions": [
+    {
+      "label": "전체",
+      "value": "전체"
+    },
+    {
+      "label": "승",
+      "value": "1"
+    },
+    {
+      "label": "무",
+      "value": "2"
+    },
+    {
+      "label": "패",
+      "value": "0"
+    }
+  ],
+  "statusFilterOptions": [
+    {
+      "label": "전체",
+      "value": ""
+    },
+    {
+      "label": "사용",
+      "value": 1
+    },
+    {
+      "label": "미사용",
+      "value": 0
+    }
+  ],
+  "deleteFilterOptions": [
+    {
+      "label": "전체",
+      "value": ""
+    },
+    {
+      "label": "표시",
+      "value": 0
+    },
+    {
+      "label": "미표시",
+      "value": 1
+    }
+  ],
+  "deleteOptions": [
+    {
+      "label": "표시",
+      "value": 0
+    },
+    {
+      "label": "미표시",
+      "value": 1
+    }
+  ],
+  "matchStatusFilterOptions": [
+    {
+      "label": "전체",
+      "value": ""
+    },
+    {
+      "label": "경기전",
+      "value": 0
+    },
+    {
+      "label": "경기중",
+      "value": 1
+    },
+    {
+      "label": "경기종료",
+      "value": 2
+    },
+    {
+      "label": "경기연기",
+      "value": 3
+    },
+    {
+      "label": "경기취소",
+      "value": 4
+    },
+    {
+      "label": "경기기권",
+      "value": 5
+    },
+    {
+      "label": "경기포기",
+      "value": "[6,9,10]"
+    },
+    {
+      "label": "경기중단",
+      "value": "[7,8]"
+    },
+    {
+      "label": "경기지연",
+      "value": 11
+    },
+    {
+      "label": "경기대기",
+      "value": 80
+    },
+    {
+      "label": "경기삭제",
+      "value": 99
+    }
+  ],
+  "matchStatusOptions": [
+    {
+      "label": "경기전",
+      "value": 0
+    },
+    {
+      "label": "경기중",
+      "value": 1
+    },
+    {
+      "label": "경기종료",
+      "value": 2
+    },
+    {
+      "label": "경기연기",
+      "value": 3
+    },
+    {
+      "label": "경기취소",
+      "value": 4
+    },
+    {
+      "label": "경기기권",
+      "value": 5
+    },
+    {
+      "label": "경기포기",
+      "value": 6
+    },
+    {
+      "label": "경기중단",
+      "value": 7
+    },
+    {
+      "label": "경기중단",
+      "value": 8
+    },
+    {
+      "label": "경기포기",
+      "value": 9
+    },
+    {
+      "label": "경기포기",
+      "value": 10
+    },
+    {
+      "label": "경기지연",
+      "value": 11
+    },
+    {
+      "label": "경기대기",
+      "value": 80
+    },
+    {
+      "label": "경기삭제",
+      "value": 99
+    }
+  ],
+  "soccerPeriodOptions": [
+    {
+      "label": "알수없음",
+      "value": 0
+    },
+    {
+      "label": "전반전",
+      "value": 101
+    },
+    {
+      "label": "하프타임",
+      "value": 102
+    },
+    {
+      "label": "후반전",
+      "value": 103
+    },
+    {
+      "label": "연장전",
+      "value": 104
+    },
+    {
+      "label": "브레이크타임",
+      "value": 105
+    },
+    {
+      "label": "패널티킥",
+      "value": 106
+    }
+  ],
+  "baseballPeriodOptions": [
+    {
+      "label": "알수없음",
+      "value": 0
+    },
+    {
+      "label": "1이닝",
+      "value": 201
+    },
+    {
+      "label": "2이닝",
+      "value": 202
+    },
+    {
+      "label": "3이닝",
+      "value": 203
+    },
+    {
+      "label": "4이닝",
+      "value": 204
+    },
+    {
+      "label": "5이닝",
+      "value": 205
+    },
+    {
+      "label": "6이닝",
+      "value": 206
+    },
+    {
+      "label": "7이닝",
+      "value": 207
+    },
+    {
+      "label": "8이닝",
+      "value": 208
+    },
+    {
+      "label": "9이닝",
+      "value": 209
+    }
+  ],
+  "basketballPeriodOptions": [
+    {
+      "label": "알수없음",
+      "value": 0
+    },
+    {
+      "label": "1쿼터",
+      "value": 301
+    },
+    {
+      "label": "2쿼터",
+      "value": 302
+    },
+    {
+      "label": "3쿼터",
+      "value": 303
+    },
+    {
+      "label": "4쿼터",
+      "value": 304
+    },
+    {
+      "label": "하프타임",
+      "value": 305
+    },
+    {
+      "label": "연장전",
+      "value": 308
+    }
+  ],
+  "icehockeyPeriodOptions": [
+    {
+      "label": "알수없음",
+      "value": 0
+    },
+    {
+      "label": "1피리어드",
+      "value": 401
+    },
+    {
+      "label": "2피리어드",
+      "value": 402
+    },
+    {
+      "label": "3피리어드",
+      "value": 403
+    },
+    {
+      "label": "브레이크타임",
+      "value": 404
+    },
+    {
+      "label": "연장전",
+      "value": 405
+    },
+    {
+      "label": "패널티킥",
+      "value": 406
+    }
+  ],
+  "volleyballPeriodOptions": [
+    {
+      "label": "알수없음",
+      "value": 0
+    },
+    {
+      "label": "1세트",
+      "value": 501
+    },
+    {
+      "label": "2세트",
+      "value": 502
+    },
+    {
+      "label": "3세트",
+      "value": 503
+    },
+    {
+      "label": "4세트",
+      "value": 504
+    },
+    {
+      "label": "5세트",
+      "value": 505
+    }
+  ],
+  "tennisPeriodOptions": [
+    {
+      "label": "알수없음",
+      "value": 0
+    },
+    {
+      "label": "1세트",
+      "value": 601
+    },
+    {
+      "label": "2세트",
+      "value": 602
+    },
+    {
+      "label": "3세트",
+      "value": 603
+    },
+    {
+      "label": "4세트",
+      "value": 604
+    },
+    {
+      "label": "5세트",
+      "value": 605
+    },
+    {
+      "label": "6세트",
+      "value": 606
+    },
+    {
+      "label": "7세트",
+      "value": 607
+    }
+  ],
+  "americanfootballPeriodOptions": [
+    {
+      "label": "알수없음",
+      "value": 0
+    },
+    {
+      "label": "1쿼터",
+      "value": 901
+    },
+    {
+      "label": "2쿼터",
+      "value": 902
+    },
+    {
+      "label": "3쿼터",
+      "value": 903
+    },
+    {
+      "label": "4쿼터",
+      "value": 904
+    },
+    {
+      "label": "하프타임",
+      "value": 905
+    }
+  ],
+  "esportsPeriodOptions": [
+    {
+      "label": "알수없음",
+      "value": 0
+    },
+    {
+      "label": "1세트",
+      "value": 1001
+    },
+    {
+      "label": "2세트",
+      "value": 1002
+    },
+    {
+      "label": "3세트",
+      "value": 1003
+    },
+    {
+      "label": "4세트",
+      "value": 1004
+    },
+    {
+      "label": "5세트",
+      "value": 1005
+    }
+  ],
+  "isAutoOptions": [
+    { "value": 1, "label": "자동" },
+    { "value": 0, "label": "수동" }
+  ],
+  "isStopOptions": [
+    { "value": 0, "label": "정상" },
+    { "value": 1, "label": "정지" }
+  ],
+  "isDeleteOptions": [
+    { "value": 0, "label": "정상" },
+    { "value": 1, "label": "삭제" }
+  ],
+  "bettingStatusFilterOptions": [
+    { "value": "", "label": "전체" },
+    { "value": 0, "label": "대기" },
+    { "value": 1, "label": "적중" },
+    { "value": 2, "label": "낙첨" },
+    { "value": 3, "label": "취소 (적특)" },
+    { "value": 4, "label": "유저취소" },
+    { "value": 5, "label": "관리자취소" }
+  ],
+  "bettingStatusOptions": [
+    { "value": 0, "label": "대기" },
+    { "value": 1, "label": "적중" },
+    { "value": 2, "label": "낙첨" },
+    { "value": 3, "label": "취소 (적특)" },
+    { "value": 4, "label": "유저취소" },
+    { "value": 5, "label": "관리자취소" }
+  ],
+  "bettingDetailStatusOptions": [
+    { "value": 0, "label": "대기" },
+    { "value": 1, "label": "적중" },
+    { "value": 2, "label": "낙첨" },
+    { "value": 3, "label": "적특" }
+  ]
+}

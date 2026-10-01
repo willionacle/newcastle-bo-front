@@ -1,0 +1,3 @@
+.selected-row-purple.ant-table-row-selected >.ant-table-cell{
+  background-color: #4f46e52b !important;
+}

@@ -1,0 +1,200 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap");
+
+body {
+  overflow: hidden;
+}
+
+/* Root app shell: bounds the whole Layout to the viewport so the flex
+   chain (Header + SideNav/Content row) has a real height to divide up.
+   100dvh (dynamic viewport height) accounts for the mobile browser's
+   address bar; plain 100vh is the fallback for browsers without it. */
+.rp-shell-viewport {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+@supports (height: 100dvh) {
+  .rp-shell-viewport {
+    height: 100dvh;
+  }
+}
+
+/* SideNav's Sider gets an explicit height (SideNavStyle.ts `siderStyle`) so
+   its menu SimpleBar can flex to fit and scroll internally instead of the
+   whole Sider growing past the screen. But antd's `Layout.Sider` wraps
+   `children` in its own internal `.ant-layout-sider-children` div (plain
+   block, not flex, no style prop exposed for it) — that div doesn't inherit
+   the Sider's height, so our flex chain broke there and the menu rendered
+   at full natural height instead. Only one Sider in the whole app
+   (SideNav.tsx), so this is safe to scope globally by class. */
+.ant-layout-sider > .ant-layout-sider-children {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.ant-table-thead .ant-table-cell {
+  cursor: pointer;
+}
+
+.text-color-blue {
+  color: blue;
+}
+
+.text-color-brown {
+  color: brown;
+}
+
+.font-bold {
+  font-weight: bold;
+}
+
+.white-row {
+  background: #fff;
+}
+
+.gray-row {
+  background: #f7f7f7;
+}
+
+.custom-wrap-text {
+  text-overflow: ellipsis;
+  overflow-wrap: anywhere;
+  max-width: 500px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  text-align: center;
+}
+
+.typeCheckBox {
+  width: 100%;
+}
+
+.typeCheckBox label {
+  width: 110px;
+}
+
+/* .custom-input-number {
+  width: 215px;
+} */
+
+.custom-input-number * {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+.custom-input-number input {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+.custom-input-number-wrapper.usdt {
+  display: flex;
+  align-items: center;
+  margin: 0 2rem 0 auto;
+}
+
+@media (min-width: 1900px) {
+  .custom-input-number-wrapper.usdt {
+    margin: 0 150px 0 auto !important;
+  }
+}
+
+.user-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+}
+
+.user-button .ant-btn-icon {
+  margin-right: 6px !important;
+}
+
+.user-button.alt {
+  background: color-mix(in srgb, var(--ant-button-default-bg), transparent 80%);
+  color: var(--ant-color-primary);
+}
+
+.textarea-count-topleft .ant-input-data-count {
+  top: -20px;
+  left: 0;
+}
+
+.user-form .ant-form-item-required {
+  flex-direction: row-reverse;
+}
+.user-form .ant-form-item-required::before {
+  margin-inline-start: 4px;
+  margin-top: -6px;
+}
+.user-form .ant-form-item-required::after {
+  display: none;
+}
+
+.td-bg-1 {
+  background-color: color-mix(in srgb, var(--ant-blue) 6%, transparent 100%);
+}
+.td-bg-2 {
+  background-color: color-mix(in srgb, var(--ant-green) 6%, transparent 100%);
+}
+.td-bg-3 {
+  background-color: color-mix(in srgb, var(--ant-yellow) 6%, transparent 100%);
+}
+.td-bg-4 {
+  background-color: color-mix(in srgb, var(--ant-red) 6%, transparent 100%);
+}
+
+.custom-ant-tooltip {
+  width: unset;
+  max-width: unset;
+}
+
+.custom-ant-tooltip .ant-tooltip-inner {
+  word-break: unset;
+  white-space: nowrap;
+  font-weight: bold;
+  color: color-mix(in srgb, var(--ant-color-primary), black 50%) !important;
+}
+
+.table-border-thick th  {
+  border: solid 1px #d3d3d3 !important;
+}
+.table-border-thick td  {
+  border: solid 1px #d3d3d3 !important;
+  border-top-width: 0 !important;
+}
+
+.deposit-duplicate-highlight td {
+  background-color: color-mix(in srgb, var(--ant-green) 15%, white) !important;
+}
+
+.jeju-h-row {
+  background: #defff9 !important; 
+}
+
+.jeju-h-row.no-hover .ant-table-cell-row-hover{
+  background: #defff9 !important; 
+}
+
+.usdt-h-row {
+  background: #cceafd !important; 
+}
+
+.usdt-h-row.no-hover .ant-table-cell-row-hover{
+  background: #cceafd !important;
+}
+
+@keyframes headerAlertBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.header-alert-blink {
+  animation: headerAlertBlink 1s ease-in-out infinite;
+  color: var(--ant-color-error, #ff4d4f) !important;
+  font-weight: bold;
+}

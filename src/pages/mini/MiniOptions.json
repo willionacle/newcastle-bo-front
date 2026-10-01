@@ -1,0 +1,31 @@
+{
+  "gameFilterOptions": [
+    { "value": "", "label": "전체" },
+    { "value": "coin_powerball", "label": "코인파워볼" },
+    { "value": "coin_ladder", "label": "코인사다리" },
+    { "value": "eos_powerball", "label": "EOS파워볼" }
+  ],
+  "statusFilterOptions": [
+    { "value": "", "label": "전체" },
+    { "value": 1, "label": "사용" },
+    { "value": 0, "label": "미사용" }
+  ],
+  "statusOptions": [
+    { "value": 1, "label": "사용" },
+    { "value": 0, "label": "미사용" }
+  ],
+  "minuteFilterOptions": [
+    { "value": "", "label": "전체" },
+    { "value": 1, "label": "1분" },
+    { "value": 2, "label": "2분" },
+    { "value": 3, "label": "3분" },
+    { "value": 4, "label": "4분" },
+    { "value": 5, "label": "5분" }
+  ],
+  "betStatusFilterOptions": [
+    { "value": "", "label": "전체" },
+    { "value": 0, "label": "대기" },
+    { "value": 1, "label": "적중" },
+    { "value": 2, "label": "낙첨" }
+  ]
+}

@@ -1,0 +1,29 @@
+import Breadcrumb from "@/components/Breadcrumb";
+import { Card, Divider, Flex } from "antd";
+import List from "./List";
+import CreateBtn from "@/components/CreateBtn";
+import { uvAccountAPI } from "@/api/uv-account/get";
+
+const USDTAccount = () => {
+  const { onHeaderCell, paginationProps, swr } = uvAccountAPI({type: 'usdt'});
+
+  return (
+    <Card>
+      <Flex align="center">
+        <Breadcrumb />
+        <CreateBtn />
+      </Flex>
+      <Divider />
+
+      <List
+        onHeaderCell={onHeaderCell}
+        data={swr.data?.data ?? []}
+        loading={swr.isLoading}
+        mutate={swr.mutate}
+        pagination={paginationProps(swr.data?.totalitems)}
+      />
+    </Card>
+  );
+};
+
+export default USDTAccount;

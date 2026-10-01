@@ -1,0 +1,34 @@
+import { Divider } from "antd";
+import Filter from "./Filter";
+import List from "./List";
+import { getChatRepliesApi } from "@/api/stream-community/get";
+import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+
+const ChatRepliesList = () => {
+  const { swr, onHeaderCell, paginationProps, setFilters } = getChatRepliesApi();
+  const navigate = useNavigate();
+    const { pathname,search  } = useLocation();
+  
+  useEffect(() => {
+    const params = new URLSearchParams(search);
+    params.set("tab", "chat-replies"); 
+    navigate(`${pathname}?${params.toString()}`, { replace: true });
+  }, []);
+
+  return (
+    <>
+      <Filter setFilters={setFilters} />
+      <Divider />
+      <List
+        data={swr.data ? swr.data.data : undefined}
+        loading={swr.isLoading}
+        onHeaderCell={onHeaderCell}
+        pagination={paginationProps(swr.data?.totalitems)}
+        mutate={swr.mutate}
+      />
+    </>
+  );
+};
+
+export default ChatRepliesList;

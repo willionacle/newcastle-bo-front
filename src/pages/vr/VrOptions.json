@@ -1,0 +1,248 @@
+{
+  "statusFilterOptions": [
+    { "value": "", "label": "전체" },
+    { "value": 1, "label": "사용" },
+    { "value": 0, "label": "미사용" }
+  ],
+  "statusOptions": [
+    { "value": 1, "label": "사용" },
+    { "value": 0, "label": "미사용" }
+  ],
+  "sportsNameFilterOptions": [
+    {
+      "label": "전체",
+      "value": ""
+    },
+    {
+      "label": "축구",
+      "value": "Soccer"
+    },
+    {
+      "label": "농구",
+      "value": "Basketball"
+    },
+    {
+      "label": "야구",
+      "value": "Baseball"
+    },
+    {
+      "label": "미식축구",
+      "value": "Football"
+    },
+    {
+      "label": "테니스",
+      "value": "Tennis"
+    },
+    {
+      "label": "크리켓",
+      "value": "Cricket"
+    },
+    {
+      "label": "다트",
+      "value": "Darts"
+    },
+    {
+      "label": "개경주",
+      "value": "Greyhounds"
+    },
+    {
+      "label": "말경주",
+      "value": "Horse"
+    },
+    {
+      "label": "오토바이경주",
+      "value": "Speedway"
+    },
+    {
+      "label": "자동차경주",
+      "value": "Motor"
+    },
+    {
+      "label": "마차경주",
+      "value": "Trotting"
+    },
+    {
+      "label": "싸이클경주",
+      "value": "Cycling"
+    },
+    {
+      "label": "카운터스트라이크",
+      "value": "Counter"
+    }
+  ],
+  "sportsNameMarketOptions": [
+    {
+      "label": "전체",
+      "value": "전체"
+    },
+    {
+      "label": "축구",
+      "value": "Soccer"
+    },
+    {
+      "label": "농구",
+      "value": "Basketball"
+    },
+    {
+      "label": "야구",
+      "value": "Baseball"
+    },
+    {
+      "label": "미식축구",
+      "value": "Football"
+    },
+    {
+      "label": "테니스",
+      "value": "Tennis"
+    },
+    {
+      "label": "크리켓",
+      "value": "Cricket"
+    },
+    {
+      "label": "다트",
+      "value": "Darts"
+    },
+    {
+      "label": "개경주",
+      "value": "Greyhounds"
+    },
+    {
+      "label": "말경주",
+      "value": "Horse"
+    },
+    {
+      "label": "오토바이경주",
+      "value": "Speedway"
+    },
+    {
+      "label": "자동차경주",
+      "value": "Motor"
+    },
+    {
+      "label": "마차경주",
+      "value": "Trotting"
+    },
+    {
+      "label": "싸이클경주",
+      "value": "Cycling"
+    },
+    {
+      "label": "카운터스트라이크",
+      "value": "Counter"
+    }
+  ],
+  "betTypeOptions": [
+    {
+      "label": "전체",
+      "value": "전체"
+    },
+    {
+      "label": "승",
+      "value": "1"
+    },
+    {
+      "label": "무",
+      "value": "2"
+    },
+    {
+      "label": "패",
+      "value": "0"
+    }
+  ],
+  "marketTypeOptions": [
+    {
+      "label": "전체",
+      "value": "전체"
+    },
+    {
+      "label": "승무패",
+      "value": "승무패"
+    },
+    {
+      "label": "오버언더",
+      "value": "오버언더"
+    },
+    {
+      "label": "핸디캡",
+      "value": "핸디캡"
+    },
+    {
+      "label": "홈팀 득점",
+      "value": "홈팀 득점"
+    },
+    {
+      "label": "원정팀 득점",
+      "value": "원정팀 득점"
+    },
+    {
+      "label": "양팀 득점",
+      "value": "양팀 득점"
+    },
+    {
+      "label": "전반 승무패",
+      "value": "전반 승무패"
+    },
+    {
+      "label": "홀짝",
+      "value": "홀짝"
+    },
+    {
+      "label": "1착",
+      "value": "1착"
+    }
+  ],
+  "marketFilterOptions": [
+    {
+      "label": "전체",
+      "value": ""
+    },
+    {
+      "label": "승무패",
+      "value": "승무패"
+    },
+    {
+      "label": "오버언더",
+      "value": "오버언더"
+    },
+    {
+      "label": "핸디캡",
+      "value": "핸디캡"
+    },
+    {
+      "label": "홈팀 득점",
+      "value": "홈팀 득점"
+    },
+    {
+      "label": "원정팀 득점",
+      "value": "원정팀 득점"
+    },
+    {
+      "label": "양팀 득점",
+      "value": "양팀 득점"
+    },
+    {
+      "label": "전반 승무패",
+      "value": "전반 승무패"
+    },
+    {
+      "label": "홀짝",
+      "value": "홀짝"
+    },
+    {
+      "label": "1착",
+      "value": "1착"
+    }
+  ],
+  "bettingStatusFilterOptions": [
+    { "value": "", "label": "전체" },
+    { "value": 0, "label": "대기" },
+    { "value": 1, "label": "적중" },
+    { "value": 2, "label": "낙첨" }
+  ],
+  "bettingStatusOptions": [
+    { "value": 0, "label": "대기" },
+    { "value": 1, "label": "적중" },
+    { "value": 2, "label": "낙첨" }
+  ]
+}
