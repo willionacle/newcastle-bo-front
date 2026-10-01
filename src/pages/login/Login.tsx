@@ -2,7 +2,7 @@ import { Alert, Button, Card, Form, Input, Layout, Typography, message, notifica
 import { CopyOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import { QRCodeSVG } from "qrcode.react";
 import { useTranslation } from "react-i18next";
-import RPLogo from "@/components/RPLogo";
+import NewcastleLogo from "@/components/NewcastleLogo";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { cardStyle, layoutStyle, logoStyle } from "./LoginStyle";
 
@@ -197,7 +197,7 @@ const Login = () => {
 
       <Card bordered={false} style={cardStyle}>
         <div style={{ ...logoStyle, display: "flex", justifyContent: "center" }}>
-          <RPLogo size="lg" />
+          <NewcastleLogo size="lg" />
         </div>
 
         {step === "credentials" && (

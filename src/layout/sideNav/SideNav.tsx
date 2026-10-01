@@ -1,5 +1,5 @@
 import { Button, Layout } from "antd";
-import RPLogo from "@/components/RPLogo";
+import NewcastleLogo from "@/components/NewcastleLogo";
 
 import {
   menuWrapperStyle,
@@ -79,10 +79,14 @@ const SideNav = ({ collapsed, setCollapsed, breakpoint }: Props) => {
       </div> */}
       <div style={siderLogoWrapperStyle(siderWidth, collapsed)}>
         {!(collapsed && !breakpoint) && (
-          <RPLogo
-            size={collapsed ? "md" : "lg"}
+          <NewcastleLogo
+            size="sm"
             collapsed={collapsed}
             onClick={handleClickLogo}
+            // Wide wordmark (~5.6:1): 28px tall ≈ 157px, leaving room for the
+            // menu button inside the 250px Sider. minWidth 0 lets it shrink
+            // in the flex row instead of pushing the button out.
+            style={collapsed ? { minWidth: 0 } : { height: 28, minWidth: 0 }}
           />
         )}
         <Button type="text" icon={<MenuOutlined />} onClick={() => setCollapsed(!collapsed)} />

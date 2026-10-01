@@ -17,13 +17,25 @@ const AvatarStyle: CSSProperties = {
   backgroundColor: "#fde3cf",
   color: "#f56a00",
   minWidth: "2rem",
+  flexShrink: 0,
   // marginLeft: "auto",
 };
 
+// Fits the 250px Sider: long usernames truncate instead of pushing the
+// language flag and action buttons out past both edges.
 const userInfoWrapper: CSSProperties = {
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'center'
+  padding: '0 12px',
+  minWidth: 0,
+}
+
+const nameStyle: CSSProperties = {
+  flex: 1,
+  minWidth: 0,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
 }
 
 // const balanceStyle: React.CSSProperties = {
@@ -99,7 +111,9 @@ const UserAvator = () => {
       <LanguageSwitcher />
       <Divider type="vertical" />
       <Avatar style={AvatarStyle}>{name.charAt(0).toUpperCase()}</Avatar>
-      <span style={{marginRight: '1.5rem'}}>{name}{operator ? ` (${operator})` : ""}</span>
+      <span style={nameStyle} title={`${name}${operator ? ` (${operator})` : ""}`}>
+        {name}{operator ? ` (${operator})` : ""}
+      </span>
       <Divider type="vertical" />
       {/* Self-service password change — every admin, not just the super tier. */}
       <Tooltip title={t("adminAccounts.myPassword")}>
