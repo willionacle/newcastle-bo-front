@@ -18,16 +18,19 @@ interface Props {
   onHeaderCell: OnHeaderCellType;
   pagination: PaginationProps;
   totalItems?: number; 
+  /** When set (e.g. inside a modal), used instead of the URL's game_category. */
+  gameCategory?: string;
 }
 
-const List = ({ data, loading, onHeaderCell, pagination,totalItems = 0 }: Props) => {
+const List = ({ data, loading, onHeaderCell, pagination,totalItems = 0, gameCategory }: Props) => {
   const { t } = useTranslation();
   const { search } = useLocation();
   const query = parse(search.replace("?", ""));
-  const isSports = ["itf_parlay", "itf_intl_parlay", "itf_special_parlay"].includes((query?.game_category as string) || "");
-  // const isSlot = query?.game_category == "slot";
-  const isLive = query?.game_category == "live";
-  const isAll = query?.game_category === "";
+  const category = gameCategory !== undefined ? gameCategory : query?.game_category;
+  const isSports = ["itf_parlay", "itf_intl_parlay", "itf_special_parlay"].includes((category as string) || "");
+  // const isSlot = category == "slot";
+  const isLive = category == "live";
+  const isAll = category === "";
   const page = pagination.current || 0
   const limit = pagination.pageSize || 0
   // betSum이 존재하는 유저만 필터링

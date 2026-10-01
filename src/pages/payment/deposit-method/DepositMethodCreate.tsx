@@ -20,12 +20,15 @@ import {
 } from "@/api/deposit-method/post";
 import Breadcrumb from "@/components/Breadcrumb";
 import SaveBtn from "@/components/SaveBtn";
+import useEditor from "@/hooks/editor/Editor";
+import { toMemoString } from "./memoContent";
 
 const DepositMethodCreate = () => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const { el: memoEditor, value: memoValue } = useEditor();
 
   const handleSubmit = async (values: any) => {
     setLoading(true);
@@ -39,7 +42,7 @@ const DepositMethodCreate = () => {
         bankName: values.bankName || undefined,
         accountNumber: values.accountNumber || undefined,
         accountName: values.accountName || undefined,
-        memo: values.memo || undefined,
+        memo: toMemoString(memoValue) || undefined,
         showMemo: values.showMemo || 0,
       };
 
@@ -97,7 +100,7 @@ const DepositMethodCreate = () => {
           isInput: false,
           showMemo: 0,
         }}
-        style={{ maxWidth: 600 }}
+        style={{ maxWidth: 900 }}
       >
         <Form.Item
           label={i18next.t("title.type")}
@@ -166,8 +169,11 @@ const DepositMethodCreate = () => {
 
         <Divider orientation="left">{i18next.t("depoMethod.memoSettingOptional")}</Divider>
 
-        <Form.Item label={i18next.t("col.memo")} name="memo">
-          <Input.TextArea placeholder={i18next.t("depoMethod.enterMemo")} rows={3} />
+        <Form.Item
+          label={i18next.t("col.memo")}
+          extra={i18next.t("depoMethod.memoEditorHelp")}
+        >
+          {memoEditor}
         </Form.Item>
 
         <Form.Item

@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import UserFormLayout from "./UserFormLayout";
 import { DepositMethodOption, UserFormProps, UserFormValues } from "./UserForm.types";
+import { mergeUserMemos } from "@/utils/userMemo";
 
 const UserForm = ({ user }: UserFormProps) => {
   const { token, userid } = useUserStore.getState();
@@ -67,9 +68,12 @@ const UserForm = ({ user }: UserFormProps) => {
 
     try {
       if (user) {
-        const response = await api[user.role_name !== "agent" ? "updateUser" : "updateAgent"](
+        const isAgent = user.role_name === "agent";
+        const response = await api[!isAgent ? "updateUser" : "updateAgent"](
           {
             ...user,
+            // Agent records only define user_memo_1, so they must not be merged.
+            ...(isAgent ? {} : mergeUserMemos(user)),
             userid: userid,
             account_name: formValues.account_name,
             account_number: formValues.account_number,

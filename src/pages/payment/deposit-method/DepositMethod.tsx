@@ -3,6 +3,7 @@ import { Card, Divider, Tabs } from "antd";
 import Breadcrumb from "@/components/Breadcrumb";
 import DepositMethodManagement from "./DepositMethodManagement";
 import DepositMethodTransfer from "./DepositMethodTransfer";
+import DepositMethodBulkUsers from "./DepositMethodBulkUsers";
 
 const { TabPane } = Tabs;
 
@@ -17,6 +18,12 @@ const DepositMethod = () => {
         </TabPane>
         <TabPane tab={i18next.t("title.moveBetweenDepositMethods")} key="transfer">
           <DepositMethodTransfer />
+        </TabPane>
+        <TabPane tab={i18next.t("depoMethodBulk.enable.tab")} key="enable-users">
+          <DepositMethodBulkUsers mode="enable" />
+        </TabPane>
+        <TabPane tab={i18next.t("depoMethodBulk.disable.tab")} key="disable-users">
+          <DepositMethodBulkUsers mode="disable" />
         </TabPane>
       </Tabs>
     </Card>

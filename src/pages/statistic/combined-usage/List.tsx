@@ -1,10 +1,14 @@
 import i18next from "@/i18n/i18n";
-import { Table, TableProps } from "antd";
+import { useState } from "react";
+import { Button, Table, TableProps, notification } from "antd";
 import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router-dom";
+import { parse } from "qs";
 import CommaNumber from "@/components/CommaNumber";
 import { OnHeaderCellType } from "@/hooks/useSort";
 import { PaginationProps } from "antd/lib";
-import { CombinedUsageData } from "@/api/cs-statics/combined-usage";
+import { CombinedUsageData, fetchUsageUsers } from "@/api/cs-statics/combined-usage";
+import UserStatsResultsModal from "@/pages/statistic/user/UserStatsResultsModal";
 import { GF } from "@/utils/GlobalFunctions";
 
 interface Props {
@@ -15,8 +19,57 @@ interface Props {
   totals: any;
 }
 
+interface StatsModalState {
+  usernames: string;
+  truncated: boolean;
+  title: string;
+}
+
+const rowKeyOf = (record: CombinedUsageData) => {
+  if (record.type === "coupon") return `coupon-${record.id}`;
+  if (record.type === "wheel") return `wheel-${record.grade}`;
+  if (record.type === "bonus") return `bonus-${record.bonusName}`;
+  return record.type;
+};
+
 const List = ({ data, loading, onHeaderCell, pagination, totals }: Props) => {
   const { t } = useTranslation();
+  const { search } = useLocation();
+  const q = parse(search.replace("?", ""));
+  const dateRange = q.dateRange as string[] | undefined;
+  const startDate = dateRange ? GF.formatDate(dateRange[0], false) : null;
+  const endDate = dateRange ? GF.formatDate(dateRange[1], false) : null;
+  const [loadingKey, setLoadingKey] = useState<string | null>(null);
+  const [statsModal, setStatsModal] = useState<StatsModalState | null>(null);
+
+  // Load the users behind a row's user count, then open 유저기간별통계 filtered to them.
+  const handleUserCountClick = async (record: CombinedUsageData, rowLabel: string) => {
+    const key = rowKeyOf(record);
+    setLoadingKey(key);
+    try {
+      const { users, truncated } = await fetchUsageUsers(record, startDate, endDate);
+      const usernames = Array.from(new Set(users.map((u) => u.username).filter(Boolean)));
+      if (usernames.length === 0) {
+        notification.info({ message: t("combinedUsage.noUsers", "해당 유저가 없습니다.") });
+        return;
+      }
+      setStatsModal({
+        usernames: usernames.join(","),
+        truncated,
+        title: `${t("sidemenu.sm004", "유저기간별통계")} - ${rowLabel}`,
+      });
+    } finally {
+      setLoadingKey(null);
+    }
+  };
+
+  const rowLabelOf = (record: CombinedUsageData) => {
+    if (record.type === "lossing-point-total") return i18next.t("stat.paybackPayout");
+    if (record.type === "referral-point-total") return i18next.t("stat.referralPointPayout");
+    if (record.type === "wheel") return GF.handleGradeStrVal(record.grade);
+    if (record.type === "bonus") return record.bonusName;
+    return record.name;
+  };
 
   const newDataSource =
     data && data.length > 0
@@ -158,19 +211,26 @@ const List = ({ data, loading, onHeaderCell, pagination, totals }: Props) => {
       title: t("col.usersUsed"),
       align: "center",
       render: (_value, record) => {
-        if (record.type === "coupon") {
-          return <CommaNumber value={record.userCount} onlyNumber />;
-        }
-        if (record.type === "wheel") {
-          return <CommaNumber value={record.user_count} onlyNumber />;
-        }
-        if (record.type === "bonus") {
-          return <CommaNumber value={record.bonusCountUsed} onlyNumber />;
-        }
-        if (record.type === "lossing-point-total" || record.type === "referral-point-total") {
-          return <CommaNumber value={record.userCount} onlyNumber />;
-        }
-        return "-";
+        let count: number | undefined;
+        if (record.type === "coupon") count = record.userCount;
+        else if (record.type === "wheel") count = record.user_count;
+        else if (record.type === "bonus") count = record.bonusCountUsed;
+        else if (record.type === "lossing-point-total" || record.type === "referral-point-total") count = record.userCount;
+
+        if (count === undefined) return "-";
+        if (!count) return <CommaNumber value={count} onlyNumber />;
+
+        return (
+          <Button
+            type="link"
+            style={{ padding: 0, height: "auto" }}
+            loading={loadingKey === rowKeyOf(record)}
+            disabled={loadingKey !== null && loadingKey !== rowKeyOf(record)}
+            onClick={() => handleUserCountClick(record, rowLabelOf(record))}
+          >
+            <CommaNumber value={count} onlyNumber />
+          </Button>
+        );
       },
     },
   ];
@@ -180,17 +240,13 @@ const List = ({ data, loading, onHeaderCell, pagination, totals }: Props) => {
   );
 
   return (
+    <>
     <Table
       sticky
       columns={columns}
       dataSource={newDataSource}
       loading={loading}
-      rowKey={(record) => {
-        if (record.type === "coupon") return `coupon-${record.id}`;
-        if (record.type === "wheel") return `wheel-${record.grade}`;
-        if (record.type === "bonus") return `bonus-${record.bonusName}`;
-        return `unknown-${Math.random()}`;
-      }}
+      rowKey={rowKeyOf}
       tableLayout="auto"
       scroll={{ x: `${import.meta.env.VITE_DEFALUT_TABLE_SCROLL}` }}
       pagination={pagination}
@@ -254,6 +310,18 @@ const List = ({ data, loading, onHeaderCell, pagination, totals }: Props) => {
         );
       }}
     />
+    {statsModal && (
+      <UserStatsResultsModal
+        open
+        onClose={() => setStatsModal(null)}
+        usernames={statsModal.usernames}
+        truncated={statsModal.truncated}
+        title={statsModal.title}
+        startDate={startDate}
+        endDate={endDate}
+      />
+    )}
+    </>
   );
 };
 

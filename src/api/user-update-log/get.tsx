@@ -21,7 +21,8 @@ export interface UserUpdateLogItem {
   source: string | null;
 }
 
-export const userUpdateLogAPI = () => {
+// defaultUsername: 회원 상세 탭처럼 한 회원으로 고정해 조회할 때 사용
+export const userUpdateLogAPI = (defaultUsername?: string) => {
   const { token } = useUserStore.getState();
   const { onHeaderCell, query, setFilters, paginationProps } = useQuery({
     filter: {
@@ -29,7 +30,7 @@ export const userUpdateLogAPI = () => {
       limit: 100,
       orderby: "desc",
       columnby: "changedAt",
-      username: null,
+      username: defaultUsername ?? null,
       userRealName: null,
       columnName: null,
       columnGroup: null,

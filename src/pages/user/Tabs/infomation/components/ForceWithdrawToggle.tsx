@@ -3,6 +3,7 @@ import i18next from "@/i18n/i18n";
 import { useState } from "react";
 import { api } from "@/api/axios";
 import useUserStore from "@/store/user.store";
+import { mergeUserMemos } from "@/utils/userMemo";
 interface ForceWithdrawToggleProps {
   username: string | null;
   checked: boolean;
@@ -28,6 +29,9 @@ const ForceWithdrawToggle = ({
         const res = await api.updateUser(
           {
             ...data,
+            // The spread re-sends every memo column; normalize so a stale
+            // snapshot cannot resurrect a merged-away memo.
+            ...mergeUserMemos(data),
             userid: userid,
             password: undefined,
             local_grade_config: data.local_grade_config ?? "automatic",

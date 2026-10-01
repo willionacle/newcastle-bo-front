@@ -662,7 +662,12 @@
     "mis139": "Rolling Point Settings",
     "mis140": "Device",
     "mis141": "OS",
-    "mis142": "Browser"
+    "mis142": "Browser",
+    "messageLog": "Message Log",
+    "userNote": {
+      "memo": "Memo",
+      "shared": "Shared Notes"
+    }
   },
   "agent": {
     "al001": "Agent Structure",
@@ -1707,7 +1712,7 @@
   },
   "col": {
     "kickoffTime": "Kickoff Time",
-    "handicap": "Handicap",
+    "handicap": "Line",
     "underOver": "Under/Over",
     "fetchedAt": "Fetched At",
     "country": "Country",
@@ -1782,7 +1787,6 @@
     "match": "Match",
     "betTimeScore": "Score at Bet Time",
     "memberBetName": "Member Bet",
-    "handicap": "Line",
     "matchDate": "Match Date",
     "betId": "Bet ID",
     "usdtAmount": "USDT Amount",
@@ -2381,7 +2385,8 @@
     "confirmChangeUsers": "Change the deposit method for {{count}} users?",
     "confirmDeleteType": "All accounts related to the '{{type}}' deposit method will be deleted. Continue?",
     "totalCount": "Total {{total}}",
-    "transferInfo": "Users on {{source}}({{sourceType}}) will have their deposit method changed to {{target}}({{targetType}})."
+    "transferInfo": "Users on {{source}}({{sourceType}}) will have their deposit method changed to {{target}}({{targetType}}).",
+    "memoEditorHelp": "Line breaks and formatting (color, bold) are shown as-is on the user site"
   },
   "text": {
     "agent": "Agent",
@@ -2505,7 +2510,9 @@
     "luckyWheelTicket": "Lucky Wheel Ticket",
     "referralPoint": "Referral Point",
     "bonusTotal": "Bonus Total",
-    "bonusRate": "Bonus Rate"
+    "bonusRate": "Bonus Rate",
+    "top10Data": "TOP10 data",
+    "betPayback": "Bet payout rate"
   },
   "unit": {
     "times": "x",
@@ -2964,7 +2971,8 @@
     "balanceRanking": "Balance Ranking",
     "overseasType": "Overseas Type",
     "domesticType": "Domestic Type",
-    "betPayoutRate": "Bet Payout Rate"
+    "betPayoutRate": "Bet Payout Rate",
+    "depositRanking": "Deposit ranking"
   },
   "miraForm": {
     "enterName": "Enter name",
@@ -3200,5 +3208,104 @@
     "sharePct": "Share %",
     "entitlement": "Entitlement",
     "netPayout": "Net Payout"
+  },
+  "copyBtn": {
+    "copyPhone": "Copy phone number",
+    "phoneNotFound": "Phone number not found.",
+    "phoneCopied": "Phone number copied.",
+    "phoneCopyFailed": "Failed to copy the phone number.",
+    "copyFailed": "Failed to copy"
+  },
+  "userSearch": {
+    "placeholder": "Search member",
+    "notFound": "Type to search",
+    "viewInList": "View in list"
+  },
+  "depoMethodBulk": {
+    "typeLabel": "Deposit method type",
+    "selectType": "Please select a deposit method type",
+    "usernamesLabel": "Member usernames",
+    "usernamesHelp": "Separate with new lines, commas or spaces. Duplicates are removed automatically; up to {{max}} members at once.",
+    "enterUsernames": "Please enter the member usernames",
+    "tooManyUsernames": "Up to {{max}} members can be processed at once",
+    "invalidUsernames": "Some usernames are invalid (letters, numbers and _ only)",
+    "uniqueCount": "{{n}} unique",
+    "invalidCount": "{{n}} invalid",
+    "reset": "Reset",
+    "countRequested": "Requested {{n}}",
+    "countUpdated": "Updated {{n}}",
+    "countCreated": "Created {{n}}",
+    "countNotFound": "Not found {{n}}",
+    "done": "Done",
+    "nothingChanged": "No accounts were changed",
+    "failed": "The request failed",
+    "error": "An error occurred while processing",
+    "enable": {
+      "tab": "Enable member deposit accounts",
+      "title": "Enable deposit accounts for members",
+      "guideTitle": "About enabling member deposit accounts",
+      "guideDesc": "Enables the deposit accounts of the listed members for the selected deposit method type. The result shows how many were updated, created and not found.",
+      "confirmTitle": "Enable deposit accounts",
+      "confirmDesc": "Enable deposit accounts of type '{{type}}' for {{n}} members?",
+      "submit": "Enable"
+    },
+    "disable": {
+      "tab": "Disable member deposit accounts",
+      "title": "Disable deposit accounts for members",
+      "guideTitle": "About disabling member deposit accounts",
+      "guideDesc": "Disables the deposit accounts of the listed members for the selected deposit method type. Members without an account of that type are skipped.",
+      "confirmTitle": "Disable deposit accounts",
+      "confirmDesc": "Disable deposit accounts of type '{{type}}' for {{n}} members?",
+      "submit": "Disable"
+    },
+    "disableAll": {
+      "button": "All OFF",
+      "confirmTitle": "All OFF",
+      "confirmDesc": "Disable every member's deposit account of type '{{type}}'?"
+    }
+  },
+  "excludedUsernames": {
+    "label": "Excluded members",
+    "help": "Listed members will not see this bonus. Leave empty to exclude no one.",
+    "placeholder": "Search and select a username (or type one and press Enter)",
+    "loading": "Loading...",
+    "noResult": "No results (press Enter to add it anyway)",
+    "typeToSearch": "Type a username",
+    "count": "{{n}} excluded (max {{max}})",
+    "empty": "Empty means no one is excluded",
+    "clearAll": "Clear all",
+    "tooMany": "Up to {{max}} members can be excluded",
+    "tooLong": "A username cannot exceed {{max}} characters"
+  },
+  "depositRetention": {
+    "period": "Period",
+    "totalDepositUsers": "Total depositing users",
+    "depositFrequency": "Deposit count",
+    "depositDays": "Deposit days",
+    "nonDepositDays": "Days without deposit",
+    "userCountRatio": "Users (share)",
+    "clickToViewUsers": "Click to view users",
+    "rangeTooLong": "The period can be at most {{days}} days.",
+    "orMore": "{{value}}+",
+    "inOutDiff": "Net deposit (total)",
+    "lastDepositMethod": "Deposit method",
+    "tendency": "Reference note",
+    "mainGame": "Main game",
+    "downloadFailed": "Download failed",
+    "downloadFailedDesc": "An error occurred while downloading member data.",
+    "modalTitle": "{{section}} - {{bucket}} users",
+    "excelDownload": "Excel download"
+  },
+  "gradeTable": {
+    "average": "Average",
+    "monthLabel": "Month {{month}}"
+  },
+  "screenshot": {
+    "view": "Screenshot view"
+  },
+  "combinedUsage": {
+    "truncatedNotice": "Too many users; only the first {{max}} are shown.",
+    "userCountShown": "Showing: {{n}} users",
+    "noUsers": "No users found."
   }
 }

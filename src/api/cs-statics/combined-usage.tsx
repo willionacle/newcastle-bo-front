@@ -53,6 +53,88 @@ export interface ReferralPointTotalData {
 
 export type CombinedUsageData = CouponUsageData | WheelUsageData | DepositBonusUsageData | LossingPointTotalData | ReferralPointTotalData;
 
+// ---- User drill-down (who is behind a row's user count) ----
+
+export interface BonusUsageUser {
+  username: string;
+  bonusName: string;
+  totalBonusAmount: number;
+  totalDepositAmount: number;
+  usageCount: number;
+  firstUsedAt: string;
+  lastUsedAt: string;
+}
+
+export interface CouponUsageUser {
+  username: string;
+  couponName: string;
+  totalAmount: number;
+  usageCount: number;
+  firstUsedAt: string;
+  lastUsedAt: string;
+}
+
+export interface WheelUsageUser {
+  username: string;
+  grade: number;
+  totalAmount: number;
+  usageCount: number;
+  firstUsedAt: string;
+  lastUsedAt: string;
+}
+
+export interface ReferralUsageUser {
+  username: string;
+  totalAmount: number;
+  usageCount: number;
+  firstIssuedAt: string;
+  lastIssuedAt: string;
+}
+
+export type LossingUsageUser = ReferralUsageUser;
+export type UsageUser = BonusUsageUser | CouponUsageUser | WheelUsageUser | ReferralUsageUser;
+
+export interface UsageUsersResult {
+  users: UsageUser[];
+  /** True when the backend cut the list at its 2,000-user cap. */
+  truncated: boolean;
+}
+
+const USAGE_USERS_URL: Record<CombinedUsageData['type'], string> = {
+  coupon: '/api/coupon/usage-users',
+  wheel: '/api/wheel/usage-users',
+  bonus: '/api/deposit-bonus/usage-users',
+  'lossing-point-total': '/api/lossing-point/issued-users',
+  'referral-point-total': '/api/referral-point/issued-users',
+};
+
+/** Users behind one combined-usage row. startDate/endDate: YYYY-MM-DD (omitted when empty). */
+export const fetchUsageUsers = async (
+  row: CombinedUsageData,
+  startDate?: string | null,
+  endDate?: string | null
+): Promise<UsageUsersResult> => {
+  const { token } = useUserStore.getState();
+
+  const params: Record<string, string | number | undefined> = {
+    startDate: startDate || undefined,
+    endDate: endDate || undefined,
+  };
+  if (row.type === 'coupon') params.couponName = row.name;
+  if (row.type === 'wheel') params.grade = row.grade;
+  if (row.type === 'bonus') params.bonusName = row.bonusName;
+
+  const res = await instance.get<
+    undefined,
+    AxiosResponse<{ code: number; data: UsageUser[]; truncated?: boolean; message?: string }>
+  >(USAGE_USERS_URL[row.type], {
+    params,
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  return { users: res.data.data || [], truncated: Boolean(res.data.truncated) };
+};
+
 export const useCouponNames = () => {
   const { token } = useUserStore.getState();
 

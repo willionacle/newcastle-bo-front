@@ -30,6 +30,7 @@ import SoundToggle from "./SoundToggle";
 import { notification } from "antd";
 import useHighStakesAlerts from "@/hooks/useHighStakesAlerts";
 import HeaderHighStakes from "./HeaderHighStakes";
+import HeaderScreenshotModal from "./HeaderScreenshotModal";
 import { proofReportSummaryAPI } from "@/api/proof-reports/get";
 
 interface Props {
@@ -46,6 +47,7 @@ const Header = ({ open, setOpen }: Props) => {
   const [data, setData] = useState<StatsDataType | null>(null);
   const [recentTrans, setRecentTrans] = useState<RecentTrans | undefined>(undefined);
   const [pendingInquiryCount, setPendingInquiryCount] = useState(0);
+  const [screenshotOpen, setScreenshotOpen] = useState(false);
   const navigate = useNavigate();
   const soundRef = useRef<Howl | null>(null);
   const { unseenCount: highStakesCount, resetUnseen: resetHighStakesCount } = useHighStakesAlerts();
@@ -183,7 +185,20 @@ const Header = ({ open, setOpen }: Props) => {
             {/* </SimpleBar> */}
 
             <Flex align="center" gap={4}>
-              <div style={{ margin: '8px 0 0', marginLeft: 'auto' }}>
+              <Button
+                type="text"
+                size="small"
+                style={{
+                  borderWidth: 1,
+                  borderColor: 'var(--primary)',
+                  margin: '8px 0 0',
+                  marginLeft: 'auto',
+                  position: 'relative',
+                  zIndex: '1'
+                }}
+                onClick={() => setScreenshotOpen(true)}
+              >{i18next.t("screenshot.view", "스크린샷보기")}</Button>
+              <div style={{ margin: '8px 0 0' }}>
                 <SoundToggle />
               </div>
               <Button
@@ -344,6 +359,14 @@ const Header = ({ open, setOpen }: Props) => {
           </div>
         )}
       </Card>
+
+      <HeaderScreenshotModal
+        open={screenshotOpen}
+        onClose={() => setScreenshotOpen(false)}
+        data={data}
+        recentTrans={recentTrans}
+        stopSound={stopSound}
+      />
     </Layout.Header>
   );
 };

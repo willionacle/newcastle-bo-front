@@ -28,6 +28,9 @@ import { InboxOutlined } from "@ant-design/icons";
 import StatsSubTabs from "./Tabs/userStats/sub-tab/SubTab";
 import { findUsersAPI } from "@/api/users/get";
 import AppliedRulesPanel from "@/components/transaction-rules/AppliedRulesPanel";
+import UserSearchSelect from "@/components/UserSearchSelect";
+import MessageLog from "./Tabs/messageLog/MessageLog";
+import UpdateLog from "./Tabs/updateLog/UpdateLog";
 // import LuckyWheelCoupon from "../promotion/lucky-wheel/tabs/CouponsTab";
 
 const UserDetail = () => {
@@ -214,16 +217,46 @@ const UserDetail = () => {
         </>
       ),
     },
+    {
+      key: "messageLog",
+      label: t("memberDetail.messageLog"),
+      children: (
+        <>
+          <Typography.Paragraph strong>
+            {t("memberDetail.messageLog")}
+          </Typography.Paragraph>
+          <MessageLog data={data} />
+        </>
+      ),
+    },
+    {
+      key: "updateLog",
+      label: t("col.memberInfoChangeLog"),
+      children: (
+        <>
+          <Typography.Paragraph strong>
+            {t("col.memberInfoChangeLog")}
+          </Typography.Paragraph>
+          <UpdateLog data={data} />
+        </>
+      ),
+    },
   ];
 
   return (
     <Card>
-      <Flex align="center" justify="space-between">
-        <Breadcrumb
-          replace={`${t("memberDetail.mis000")} [${data?.username ?? ''}] [${data?.user_real_name ?? ''}]`}
-        />
+      <Flex align="center" gap={"1em"}>
+        <div style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
+          <Breadcrumb
+            replace={`${t("memberDetail.mis000")} [${data?.username ?? ''}] [${data?.user_real_name ?? ''}]`}
+          />
+        </div>
 
-        <Flex gap={"0.5em"}>
+        <div style={{ flex: 1, minWidth: 160, maxWidth: 480 }}>
+          <UserSearchSelect />
+        </div>
+
+        <Flex gap={"0.5em"} style={{ flexShrink: 0, marginLeft: "auto" }}>
           <Button className="user-button" icon={<InboxOutlined />}  onClick={() => setUsername(data?.username)}>
             쪽지
           </Button>
@@ -252,7 +285,7 @@ const UserDetail = () => {
               navigate(`${pathname}?tab=${key}&${stringify({dateRange: [dayjs().tz().startOf('day').format(), dayjs().tz().endOf('day').format()]})}`);
             } else if (key === 'info') {
               navigate(`${pathname}?tab=${key}&${stringify({dateRangeT: [dayjs().tz().startOf('day').format(), dayjs().tz().endOf('day').format()]})}`);
-            } else if (key === 'loginLog') {
+            } else if (key === 'loginLog' || key === 'messageLog') {
               navigate(`${pathname}?tab=${key}&${stringify({dateRange: [dayjs().startOf('month').format(), dayjs().endOf('month').format()]})}`);
             } else if (key === 'dailystats') {
               navigate(`${pathname}?tab=${key}&${stringify({dateRange: [dayjs().tz().startOf('day').format(), dayjs().tz().endOf('day').format()]})}`);

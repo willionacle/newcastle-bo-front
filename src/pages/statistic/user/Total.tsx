@@ -7,16 +7,19 @@ import { useLocation } from "react-router-dom";
 interface Props {
   total: UserDailyStatsTotal | undefined;
   loading: boolean;
+  /** When set (e.g. inside a modal), used instead of the URL's game_category. */
+  gameCategory?: string;
 }
 
-const Total = ({ total, loading }: Props) => {
+const Total = ({ total, loading, gameCategory }: Props) => {
   const { t } = useTranslation();
   const { search } = useLocation();
   const query = parse(search.replace("?", ""));
-  const isSports = ["itf_parlay", "itf_intl_parlay", "itf_special_parlay"].includes((query?.game_category as string) || "");
-  const isLive = query?.game_category == "live";
-  // const isSlot = query?.game_category == "slot";
-  const isAll = query?.game_category === "";
+  const category = gameCategory !== undefined ? gameCategory : query?.game_category;
+  const isSports = ["itf_parlay", "itf_intl_parlay", "itf_special_parlay"].includes((category as string) || "");
+  const isLive = category == "live";
+  // const isSlot = category == "slot";
+  const isAll = category === "";
 
   const columnsArray: TableProps<UserDailyStatsTotal>["columns"] = [
     {

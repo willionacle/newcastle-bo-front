@@ -662,7 +662,12 @@
     "mis139": "롤링포인트설정",
     "mis140": "디바이스",
     "mis141": "운영체제",
-    "mis142": "브라우저"
+    "mis142": "브라우저",
+    "messageLog": "쪽지로그",
+    "userNote": {
+      "memo": "메모사항",
+      "shared": "공유사항"
+    }
   },
   "agent": {
     "al001": "총판 구성표",
@@ -1707,7 +1712,7 @@
   },
   "col": {
     "kickoffTime": "킥오프 일시",
-    "handicap": "핸디캡",
+    "handicap": "기준점",
     "underOver": "언더/오버",
     "fetchedAt": "수집일시",
     "country": "국가",
@@ -1782,7 +1787,6 @@
     "match": "경기명",
     "betTimeScore": "베팅시점스코어",
     "memberBetName": "회원 배팅명",
-    "handicap": "기준점",
     "matchDate": "경기날짜",
     "betId": "배팅ID",
     "usdtAmount": "U수량",
@@ -2381,7 +2385,8 @@
     "confirmChangeUsers": "{{count}}명의 사용자의 입금방식을 변경하시겠습니까?",
     "confirmDeleteType": "'{{type}}' 입금방법과 관련된 모든 계좌가 삭제됩니다. 계속하시겠습니까?",
     "totalCount": "총 {{total}}개",
-    "transferInfo": "{{source}}({{sourceType}})를 사용하는 유저들의 입금방법이 {{target}}({{targetType}})으로 변경됩니다."
+    "transferInfo": "{{source}}({{sourceType}})를 사용하는 유저들의 입금방법이 {{target}}({{targetType}})으로 변경됩니다.",
+    "memoEditorHelp": "줄바꿈과 서식(색상·굵기)이 그대로 유저페이지에 노출됩니다"
   },
   "text": {
     "agent": "에이전트",
@@ -2505,7 +2510,9 @@
     "luckyWheelTicket": "럭키휠티켓",
     "referralPoint": "지인추천포인트",
     "bonusTotal": "보너스합계",
-    "bonusRate": "보너스율"
+    "bonusRate": "보너스율",
+    "top10Data": "TOP10 데이터",
+    "betPayback": "베팅환수"
   },
   "unit": {
     "times": "배",
@@ -2964,7 +2971,8 @@
     "balanceRanking": "보유금랭킹",
     "overseasType": "해외형",
     "domesticType": "국내형",
-    "betPayoutRate": "베팅환수율"
+    "betPayoutRate": "베팅환수율",
+    "depositRanking": "입금랭킹"
   },
   "miraForm": {
     "enterName": "이름을 입력해주세요",
@@ -3200,5 +3208,104 @@
     "sharePct": "지분율",
     "entitlement": "산정 수익",
     "netPayout": "실지급액"
+  },
+  "copyBtn": {
+    "copyPhone": "전화번호 복사",
+    "phoneNotFound": "전화번호를 찾을 수 없습니다.",
+    "phoneCopied": "전화번호가 복사되었습니다.",
+    "phoneCopyFailed": "전화번호 복사에 실패했습니다.",
+    "copyFailed": "복사에 실패했습니다"
+  },
+  "userSearch": {
+    "placeholder": "회원 검색",
+    "notFound": "검색어를 입력하세요",
+    "viewInList": "목록에서 보기"
+  },
+  "depoMethodBulk": {
+    "typeLabel": "입금방법 타입",
+    "selectType": "입금방법 타입을 선택해주세요",
+    "usernamesLabel": "회원 아이디 목록",
+    "usernamesHelp": "줄바꿈, 콤마 또는 공백으로 구분합니다. 중복은 자동으로 제거되며 한 번에 최대 {{max}}명까지 가능합니다.",
+    "enterUsernames": "회원 아이디 목록을 입력해주세요",
+    "tooManyUsernames": "한 번에 최대 {{max}}명까지 처리할 수 있습니다",
+    "invalidUsernames": "형식이 올바르지 않은 아이디가 있습니다 (영문/숫자/_ 만 허용)",
+    "uniqueCount": "중복 제거 {{n}}명",
+    "invalidCount": "형식 오류 {{n}}명",
+    "reset": "초기화",
+    "countRequested": "요청 {{n}}명",
+    "countUpdated": "변경 {{n}}건",
+    "countCreated": "신규 생성 {{n}}건",
+    "countNotFound": "존재하지 않는 회원 {{n}}명",
+    "done": "처리되었습니다",
+    "nothingChanged": "변경된 계정이 없습니다",
+    "failed": "처리에 실패했습니다",
+    "error": "처리 중 오류가 발생했습니다",
+    "enable": {
+      "tab": "유저 입금계정 활성화",
+      "title": "입금계정 유저 활성화",
+      "guideTitle": "입금계정 유저 활성화 안내",
+      "guideDesc": "선택한 입금방법 타입에 대해 입력한 회원들의 입금계정을 활성화합니다. 처리 결과에 변경·신규 생성·존재하지 않는 회원 수가 표시됩니다.",
+      "confirmTitle": "입금계정 활성화",
+      "confirmDesc": "'{{type}}' 타입에 대해 {{n}}명의 입금계정을 활성화합니다. 계속하시겠습니까?",
+      "submit": "활성화 실행"
+    },
+    "disable": {
+      "tab": "유저 입금계정 비활성화",
+      "title": "입금계정 유저 비활성화",
+      "guideTitle": "입금계정 유저 비활성화 안내",
+      "guideDesc": "선택한 입금방법 타입에 대해 입력한 회원들의 입금계정을 비활성화합니다. 해당 타입 계정이 없는 회원은 변경 대상에서 제외됩니다.",
+      "confirmTitle": "입금계정 비활성화",
+      "confirmDesc": "'{{type}}' 타입에 대해 {{n}}명의 입금계정을 비활성화합니다. 계속하시겠습니까?",
+      "submit": "비활성화 실행"
+    },
+    "disableAll": {
+      "button": "전체OFF",
+      "confirmTitle": "전체 OFF",
+      "confirmDesc": "'{{type}}' 타입의 모든 회원 입금계정을 비활성화합니다. 계속하시겠습니까?"
+    }
+  },
+  "excludedUsernames": {
+    "label": "제외 유저",
+    "help": "등록된 회원에게는 이 보너스가 노출되지 않습니다. 비워두면 제외 유저가 없습니다.",
+    "placeholder": "유저명 검색 후 선택 (직접 입력 후 Enter 로도 추가)",
+    "loading": "로딩 중...",
+    "noResult": "결과 없음 (Enter 로 직접 추가 가능)",
+    "typeToSearch": "유저명을 입력하세요",
+    "count": "제외 유저 {{n}}명 (최대 {{max}}명)",
+    "empty": "비워두면 제외 유저 없음",
+    "clearAll": "전체 삭제",
+    "tooMany": "제외 유저는 최대 {{max}}명까지 등록할 수 있습니다",
+    "tooLong": "유저명은 {{max}}자를 넘을 수 없습니다"
+  },
+  "depositRetention": {
+    "period": "기간",
+    "totalDepositUsers": "총 입금유저수",
+    "depositFrequency": "입금횟수",
+    "depositDays": "입금일수",
+    "nonDepositDays": "미입금일수",
+    "userCountRatio": "유저수(비중)",
+    "clickToViewUsers": "클릭하여 유저 목록 보기",
+    "rangeTooLong": "조회 기간은 최대 {{days}}일까지 가능합니다.",
+    "orMore": "{{value}}이상",
+    "inOutDiff": "총입출차액",
+    "lastDepositMethod": "입금 방식",
+    "tendency": "참고성향",
+    "mainGame": "주게임",
+    "downloadFailed": "다운로드 실패",
+    "downloadFailedDesc": "회원 정보를 다운로드하는 중 오류가 발생했습니다.",
+    "modalTitle": "{{section}} - {{bucket}} 유저 목록",
+    "excelDownload": "엑셀 다운로드"
+  },
+  "gradeTable": {
+    "average": "평균",
+    "monthLabel": "{{month}}월"
+  },
+  "screenshot": {
+    "view": "스크린샷보기"
+  },
+  "combinedUsage": {
+    "truncatedNotice": "대상 유저가 너무 많아 상위 {{max}}명까지만 표시됩니다.",
+    "userCountShown": "표시 대상: {{n}}명",
+    "noUsers": "해당 유저가 없습니다."
   }
 }

@@ -28,6 +28,7 @@ import AgentUsername from "@/components/AgentUsername";
 import SummaryInAlert from "@/components/SummaryInAlert";
 import commaNumber from "comma-number";
 import CopyBtn from "@/components/CopyBtn";
+import PhoneCopyBtn from "@/components/PhoneCopyBtn";
 
 interface Props {
   data: ResPostList['data'];
@@ -337,7 +338,12 @@ const List = ({ data, loading, mutate, pagination, totals }: Props) => {
             shape="circle"
             onClick={() => navigate(`/user/${record.user_id}`)}
           />
-          <EditBtn link={`/user/edit/${record.user_id}`} />
+          {/* 카드 입금자는 카드 대행 출금용 전화번호 복사로 편집 버튼을 대신한다 */}
+          {record.last_deposit_type?.toLowerCase() === "card" ? (
+            <PhoneCopyBtn username={record.username} />
+          ) : (
+            <EditBtn link={`/user/edit/${record.user_id}`} />
+          )}
           <Button
             icon={<MessageFilled />}
             shape="circle"

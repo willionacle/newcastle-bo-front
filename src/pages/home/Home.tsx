@@ -1,4 +1,5 @@
 import { Card, Col, Row } from "antd";
+import DepositRetentionStats from "./components/deposit-retention/DepositRetentionStats";
 import DashboardTable from "./components/table/DashboardTable";
 import DepositBettingBarChart from "./components/chart/DepositBettingBarChart";
 // import PaybackLineChart from "./components/chart/PaybackLineChart";
@@ -8,7 +9,7 @@ import BonusMemberLineChart from "./components/chart/BonusMemberLineChart";
 import CouponMemberLineChart from "./components/chart/CouponMemberLineChart";
 // import PaybackGradeLineChart from "./components/chart/PaybackGradeLineChart";
 import BettingAmountBarChart from "./components/chart/BettingAmountLineChart";
-import BettingGradeLineChart from "./components/chart/BettingGradeLineChart";
+import BettingGradeLineChartCard from "./components/chart/BettingGradeLineChartCard";
 import BettingAmounTable from "./components/table/betting-amount-count/BettingAmountCount";
 import UserBettorGradeBarChart from "./components/chart/UserBettorGradeBarChart";
 import UserGradeLineChart from "./components/chart/UserGradeLineChart";
@@ -18,6 +19,11 @@ const Home = () => {
 
   return (
     <Row gutter={[8, 8]} style={{textAlign: 'center'}}>
+      <Col span={24}>
+        <Card style={{height: '100%'}}>
+          <DepositRetentionStats />
+        </Card>
+      </Col>
       <Col span={24}>
         <Card style={{height: '100%'}}>
           <DashboardTable />
@@ -47,7 +53,7 @@ const Home = () => {
       </Col>
       <Col xs={24} md={12}>
         <Card style={{height: '100%'}}>
-          <BettingGradeLineChart />
+          <BettingGradeLineChartCard />
         </Card>
       </Col>
       <Col xs={24} md={12}>

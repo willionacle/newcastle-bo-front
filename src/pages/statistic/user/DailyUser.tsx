@@ -1,6 +1,6 @@
 import i18next from "@/i18n/i18n";
 import Breadcrumb from "@/components/Breadcrumb";
-import { Card, Divider, Flex } from "antd";
+import { Button, Card, Divider, Flex, Space } from "antd";
 import Filter from "./Filter";
 import List from "./List";
 import { userDailyStatsAPI, UserDailyStatsData } from "@/api/cs-statics/user-daily-stats";
@@ -8,6 +8,10 @@ import DownloadXlsx from "@/components/DownloadXlsx";
 import Total from "./Total";
 import { GF } from "@/utils/GlobalFunctions";
 import GameCategoryButtonFilter from "./component/GameCategoryBtn";
+import Top10Modal from "./Top10Modal";
+import { useState } from "react";
+import { useLocation } from "react-router-dom";
+import { parse } from "qs";
 
 interface ExcelReportType {
   "ID": string;
@@ -36,6 +40,13 @@ interface ExcelReportType {
 
 const DailyUser = () => {
   const { swr, onHeaderCell, setFilters, paginationProps } = userDailyStatsAPI();
+  const { search } = useLocation();
+  const [isTop10Open, setIsTop10Open] = useState(false);
+
+  // Derive the selected period the same way Filter does, so TOP10 reflects it.
+  const period = parse(search.replace("?", "")) as { dateRange?: string[] };
+  const top10StartDate = period.dateRange ? GF.formatDate(period.dateRange[0], false) : null;
+  const top10EndDate = period.dateRange ? GF.formatDate(period.dateRange[1], false) : null;
 
   const sortResData = (data: UserDailyStatsData[] | undefined) => {
     const arr = [] as ExcelReportType[]
@@ -74,7 +85,12 @@ const DailyUser = () => {
     <Card>
       <Flex justify="space-between">
         <Breadcrumb />
-        <DownloadXlsx data={swr.data && swr.data.data ? sortResData(swr.data?.data) : []} fileName={i18next.t("sidemenu.sm004")} />
+        <Space>
+          <Button onClick={() => setIsTop10Open(true)} disabled={swr.isLoading}>
+            {i18next.t("userStats.top10Data", "TOP10 데이터")}
+          </Button>
+          <DownloadXlsx data={swr.data && swr.data.data ? sortResData(swr.data?.data) : []} fileName={i18next.t("sidemenu.sm004")} />
+        </Space>
       </Flex>
       <Divider />
       <Filter setFilter={setFilters} />
@@ -88,6 +104,12 @@ const DailyUser = () => {
         totalItems={swr.data?.totalitems || 0} 
         onHeaderCell={onHeaderCell} 
         pagination={paginationProps(swr.data?.totalitems)} 
+      />
+      <Top10Modal
+        open={isTop10Open}
+        onClose={() => setIsTop10Open(false)}
+        startDate={top10StartDate}
+        endDate={top10EndDate}
       />
     </Card>
   );

@@ -94,6 +94,7 @@ export interface PaybackGradeChartData  {
 }
 export interface BettingGradeChartData  {
   "regdate": string;
+  "up_date"?: string; // /chartbettinggradedaily rows carry up_date alongside regdate
   "total_bet_amount": number;
   "total_user": number;
   "black_diamond": number;
@@ -103,6 +104,15 @@ export interface BettingGradeChartData  {
   "gold": number;
   "silver": number;
   "bronze": number;
+  // Present on /chartbettinggradedaily rows only (users who actually placed a bet).
+  "total_user_with_bet"?: number;
+  "black_diamond_with_bet"?: number;
+  "diamond_with_bet"?: number;
+  "ruby_with_bet"?: number;
+  "emerald_with_bet"?: number;
+  "gold_with_bet"?: number;
+  "silver_with_bet"?: number;
+  "bronze_with_bet"?: number;
   "black_diamond_amount": number;
   "diamond_amount": number;
   "ruby_amount": number;
@@ -514,4 +524,64 @@ export const getLineChartCouponMember = () => {
   };
   
   return useSWR('/chartcouponmember', fetcher);
+};
+
+export interface BettingGradeDailyAverage {
+  "month_date": string; // YYYY-MM
+  "avg_black_diamond": number;
+  "avg_black_diamond_amount": number;
+  "avg_diamond": number;
+  "avg_diamond_amount": number;
+  "avg_ruby": number;
+  "avg_ruby_amount": number;
+  "avg_emerald": number;
+  "avg_emerald_amount": number;
+  "avg_gold": number;
+  "avg_gold_amount": number;
+  "avg_silver": number;
+  "avg_silver_amount": number;
+  "avg_bronze": number;
+  "avg_bronze_amount": number;
+  "avg_total_user": number;
+  "avg_total_bet_amount": number;
+  "avg_black_diamond_with_bet": number;
+  "avg_diamond_with_bet": number;
+  "avg_ruby_with_bet": number;
+  "avg_emerald_with_bet": number;
+  "avg_gold_with_bet": number;
+  "avg_silver_with_bet": number;
+  "avg_bronze_with_bet": number;
+  "avg_total_user_with_bet": number;
+}
+export interface BettingGradeDailyTableData extends SWRType<BettingGradeChartData[]> {
+  average: BettingGradeDailyAverage[];
+}
+
+// Current-month daily betting users by grade + per-month averages.
+// Shared by the dashboard daily table and the header screenshot modal (same SWR key -> one request).
+export const getBettingGradeDailyTable = () => {
+  const { token, userid } = useUserStore.getState();
+  const now = new Date();
+  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+  const fetcher = async (url: string) => {
+    const res = await instance.post<undefined, AxiosResponse<BettingGradeDailyTableData>>(
+      url,
+      {
+        userid,
+        start_date: firstDayOfMonth.toLocaleDateString('en-CA'),
+        end_date: lastDayOfMonth.toLocaleDateString('en-CA'),
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return res.data;
+  };
+
+  return useSWR('/chartbettinggradedaily', fetcher);
 };

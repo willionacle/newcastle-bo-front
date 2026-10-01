@@ -14,14 +14,14 @@ interface Props {
   hideAll?: boolean;
 }
 
-interface GameCatButtonProps {
+export interface GameCatButtonProps {
   label: string;
   value: string;
 }
 
 // Values must match the backend's game_category enum exactly: all, slot,
 // minigame, live, special, itf_parlay, itf_intl_parlay, itf_special_parlay.
-const GameCatBtnData: GameCatButtonProps[] = [
+export const GameCatBtnData: GameCatButtonProps[] = [
   {
     label: i18next.t("col.all"),
     value: "",
@@ -56,7 +56,7 @@ const GameCatBtnData: GameCatButtonProps[] = [
   },
 ];
 
-const btnCSS: CSSProperties = {
+export const btnCSS: CSSProperties = {
   background: "var(--ant-button-default-active-bg)",
   color: "var(--ant-color-primary)",
   borderColor: "var(--ant-color-primary)",
@@ -64,7 +64,7 @@ const btnCSS: CSSProperties = {
   fontWeight: 700,
 };
 
-const btnCSSActive: CSSProperties = {
+export const btnCSSActive: CSSProperties = {
   // background: 'unset',
   color: "var(--ant-button-default-color)",
   borderColor: "var(--ant-color-primary)",

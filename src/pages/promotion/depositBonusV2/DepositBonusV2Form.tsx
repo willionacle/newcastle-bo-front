@@ -5,6 +5,12 @@ import { DepositBonusV2Data } from "@/api/deposit-bonuses-v2/get";
 import LevelSelectorV2 from "@/components/LevelSelectorV2";
 import GradeSelectorV2 from "@/components/GradeSelectorV2";
 import SaveBtn from "@/components/SaveBtn";
+import ExcludedUsernameSelect, {
+  MAX_EXCLUDED_USERNAMES,
+  MAX_USERNAME_LENGTH,
+  normalizeUsernames,
+  parseUsernameList,
+} from "@/components/ExcludedUsernameSelect";
 import {
   Button,
   Col,
@@ -44,6 +50,7 @@ interface FormProps {
   bonusGroup: string;
   exposurePeriods?: ExposurePeriod[];
   isWelcome: boolean;
+  excludedUsernames?: string[];
 }
 
 interface Props {
@@ -76,6 +83,7 @@ const DepositBonusV2Form = ({ data }: Props) => {
       bonusGroup,
       exposurePeriods,
       isWelcome,
+      excludedUsernames,
     } = e;
 
     const formattedExposurePeriods =
@@ -100,6 +108,8 @@ const DepositBonusV2Form = ({ data }: Props) => {
       bonusGroup,
       exposurePeriods: formattedExposurePeriods,
       isWelcome: isWelcome === true,
+      // 빈 배열을 보내면 서버에서 제외 목록이 비워진다
+      excludedUsernames: normalizeUsernames(excludedUsernames),
     };
 
     try {
@@ -168,6 +178,7 @@ const DepositBonusV2Form = ({ data }: Props) => {
         exposurePeriods: parsedExposurePeriods,
         // Backend may hand back true/false/1/0/null — normalize to boolean.
         isWelcome: !!data.isWelcome,
+        excludedUsernames: parseUsernameList(data.excludedUsernames),
       });
     }
   }, [data, form]);
@@ -465,6 +476,35 @@ const DepositBonusV2Form = ({ data }: Props) => {
               </>
             )}
           </Form.List>
+        </Col>
+
+        <Col span={24}>
+          <Form.Item
+            name="excludedUsernames"
+            label={t("excludedUsernames.label")}
+            extra={t("excludedUsernames.help")}
+            rules={[
+              {
+                validator: (_, value: string[] | undefined) => {
+                  const list = value ?? [];
+
+                  if (list.length > MAX_EXCLUDED_USERNAMES) {
+                    return Promise.reject(
+                      new Error(t("excludedUsernames.tooMany", { max: MAX_EXCLUDED_USERNAMES }))
+                    );
+                  }
+                  if (list.some((username) => username.length > MAX_USERNAME_LENGTH)) {
+                    return Promise.reject(
+                      new Error(t("excludedUsernames.tooLong", { max: MAX_USERNAME_LENGTH }))
+                    );
+                  }
+                  return Promise.resolve();
+                },
+              },
+            ]}
+          >
+            <ExcludedUsernameSelect />
+          </Form.Item>
         </Col>
 
         <Col span={24}>

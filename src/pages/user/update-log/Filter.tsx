@@ -56,8 +56,8 @@ const getColumnGroupKorean = (columnGroup: string): string => {
   return groupMapping[columnGroup] || columnGroup;
 };
 
-// 컬럼 그룹 옵션 리스트
-const columnGroupOptions = [
+// 컬럼 그룹 옵션 리스트 (회원 상세 > 회원정보변경내역 탭에서도 사용)
+export const columnGroupOptions = [
   { value: 'rollingGroup', label: getColumnGroupKorean('rollingGroup') },
   { value: 'lossingGroup', label: getColumnGroupKorean('lossingGroup') },
   { value: 'levelGroup', label: getColumnGroupKorean('levelGroup') },

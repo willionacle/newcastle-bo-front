@@ -25,6 +25,8 @@ export interface DepositBonusV2Data {
   // WELCOME_BONUS_AND_MAINTENANCE_FRONTEND_INTEGRATION.md §16. The backend
   // accepts true/false/1/0/null on write; normalize to boolean on read.
   isWelcome?: boolean | 0 | 1 | null;
+  // 이 보너스에서 제외할 회원 아이디. GET 은 배열로 내려오지만 JSON 문자열도 방어한다.
+  excludedUsernames?: string[] | string | null;
   createdAt: string;
   updatedAt: string;
 }

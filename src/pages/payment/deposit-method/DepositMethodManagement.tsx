@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import i18next from "@/i18n/i18n";
 import {
   Table,
@@ -12,6 +12,7 @@ import {
   Popconfirm,
   notification,
   Switch,
+  Typography,
 } from "antd";
 import {
   EditOutlined,
@@ -19,6 +20,7 @@ import {
   PlusOutlined,
   DeleteOutlined,
   EyeOutlined,
+  PoweroffOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -32,10 +34,15 @@ import {
   UpdateDepositMethodParams,
   deleteDepositMethod,
 } from "@/api/deposit-method/post";
+import { disableDepositAccountsByTypeAPI } from "@/api/deposit-account/put";
 import commaNumber from "comma-number";
+import useEditor from "@/hooks/editor/Editor";
+import { toEditorContent, toMemoPreview, toMemoString } from "./memoContent";
+import { notifyBulkError, notifyBulkResult } from "./bulkResult";
 import DepositMethodUserListModal from "./components/deposit-method-users/DepositMethodUserListModal";
 
 const { Option } = Select;
+const { Paragraph } = Typography;
 
 interface EditModalProps {
   visible: boolean;
@@ -47,6 +54,10 @@ interface EditModalProps {
 const EditModal = ({ visible, onCancel, onConfirm, item }: EditModalProps) => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
+  // 에디터 초기값은 마운트 시점에만 반영된다. 부모가 행마다 key 로 remount 한다.
+  // 기존 평문 memo 는 줄 단위 문단으로 변환해서 띄운다.
+  const memoContent = useMemo(() => toEditorContent(item?.memo), [item]);
+  const { el: memoEditor, value: memoValue } = useEditor(memoContent);
 
   useEffect(() => {
     if (visible && item) {
@@ -59,7 +70,6 @@ const EditModal = ({ visible, onCancel, onConfirm, item }: EditModalProps) => {
         bankName: item.bankName || "",
         accountNumber: item.accountNumber || "",
         accountName: item.accountName || "",
-        memo: item.memo || "",
         showMemo: item.showMemo || 0,
         syncToAccountsBankInfo: false,
         syncToAccountsStatus: false,
@@ -73,6 +83,7 @@ const EditModal = ({ visible, onCancel, onConfirm, item }: EditModalProps) => {
     const params: UpdateDepositMethodParams = {
       id: item.id,
       ...values,
+      memo: toMemoString(memoValue),
     };
 
     onConfirm(params);
@@ -84,7 +95,7 @@ const EditModal = ({ visible, onCancel, onConfirm, item }: EditModalProps) => {
       open={visible}
       onCancel={onCancel}
       footer={null}
-      width={600}
+      width={900}
     >
       <Form form={form} layout="vertical" onFinish={handleSubmit}>
         <Form.Item
@@ -155,8 +166,11 @@ const EditModal = ({ visible, onCancel, onConfirm, item }: EditModalProps) => {
 
         <Divider orientation="left">{i18next.t("depoMethod.memoSettingOptional")}</Divider>
 
-        <Form.Item label={i18next.t("col.memo")} name="memo">
-          <Input.TextArea placeholder={i18next.t("depoMethod.enterMemo")} rows={3} />
+        <Form.Item
+          label={i18next.t("col.memo")}
+          extra={i18next.t("depoMethod.memoEditorHelp")}
+        >
+          {memoEditor}
         </Form.Item>
 
         <Form.Item
@@ -280,6 +294,16 @@ const DepositMethodManagement = () => {
     }
   };
 
+  const handleDisableAll = async (type: string) => {
+    try {
+      const res = await disableDepositAccountsByTypeAPI(type);
+      notifyBulkResult(res.data);
+      mutate();
+    } catch (error) {
+      notifyBulkError(error);
+    }
+  };
+
   const handleSearch = (values: any) => {
     setSearchParams((prev) => ({
       ...prev,
@@ -370,10 +394,29 @@ const DepositMethodManagement = () => {
       title: i18next.t("col.memo"),
       dataIndex: "memo",
       key: "memo",
-      width: 150,
-      align: "center" as const,
-      ellipsis: true,
-      render: (text: string) => text || "-",
+      width: 220,
+      align: "left" as const,
+      render: (text: string) => {
+        // memo 는 Slate JSON(신규) 또는 평문(기존)이라 목록에서는 평문만 뽑아 보여준다
+        const preview = toMemoPreview(text);
+
+        return preview ? (
+          <Paragraph
+            ellipsis={{
+              rows: 2,
+              tooltip: {
+                title: <span style={{ whiteSpace: "pre-wrap" }}>{preview}</span>,
+                overlayStyle: { maxWidth: 400 },
+              },
+            }}
+            style={{ marginBottom: 0 }}
+          >
+            {preview}
+          </Paragraph>
+        ) : (
+          "-"
+        );
+      },
     },
     {
       title: i18next.t("title.memoDisplay"),
@@ -398,10 +441,22 @@ const DepositMethodManagement = () => {
     {
       title: i18next.t("userGameSettings.action"),
       key: "action",
-      width: 300,
+      width: 380,
       align: "center" as const,
       render: (_: any, record: DepositMethodItem) => (
         <Space size="small">
+          <Popconfirm
+            title={i18next.t("depoMethodBulk.disableAll.confirmTitle")}
+            description={i18next.t("depoMethodBulk.disableAll.confirmDesc", { type: record.type })}
+            onConfirm={() => handleDisableAll(record.type)}
+            okText={i18next.t("depoMethodBulk.disableAll.button")}
+            cancelText={i18next.t("global.cancel")}
+            okButtonProps={{ danger: true }}
+          >
+            <Button type="link" danger icon={<PoweroffOutlined />}>
+              {i18next.t("depoMethodBulk.disableAll.button")}
+            </Button>
+          </Popconfirm>
           <Button
             type="link"
             icon={<EyeOutlined />}
@@ -490,6 +545,7 @@ const DepositMethodManagement = () => {
       />
 
       <EditModal
+        key={editingItem?.id}
         visible={editModalVisible}
         onCancel={() => {
           setEditModalVisible(false);

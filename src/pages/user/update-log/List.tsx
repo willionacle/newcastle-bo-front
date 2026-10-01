@@ -12,6 +12,7 @@ interface Props {
   loading: boolean;
   onHeaderCell: any;
   pagination: any;
+  hideUserColumns?: boolean;
 }
 
 // 컬럼 그룹 한글 매핑 함수
@@ -76,7 +77,7 @@ const extractTitleFromSource = (source: string | null): string => {
   return match ? match[1] : "";
 };
 
-const List = ({ data, loading, onHeaderCell, pagination }: Props) => {
+const List = ({ data, loading, onHeaderCell, pagination, hideUserColumns }: Props) => {
   const columnsArray: TableProps<UserUpdateLogItem>["columns"] = [
     {
       title: "No",
@@ -180,7 +181,12 @@ const List = ({ data, loading, onHeaderCell, pagination }: Props) => {
     },
   ];
 
-  const columns = columnsArray.map((item) =>
+  // 회원 상세 탭처럼 이미 한 회원으로 고정된 화면에서는 아이디/이름 컬럼을 숨긴다
+  const visibleColumns = hideUserColumns
+    ? columnsArray.filter((item) => !["username", "userRealName"].includes(item.key as string))
+    : columnsArray;
+
+  const columns = visibleColumns.map((item) =>
     item.key !== "action" && item.key ? { ...item, onHeaderCell } : item
   );
 
